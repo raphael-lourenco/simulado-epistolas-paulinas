@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulados AV2 — Ética II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F5F1;
+  --bg-soft:#EFEBE3;
+  --surface:#FFFFFF;
+  --surface-soft:#F3F0EA;
+  --ink:#23211D;
+  --ink-soft:#6B665C;
+  --ink-faint:#A39E92;
+  --teal:#1B5E5A;
+  --teal-soft:#2D7E79;
+  --teal-bg:#E8F2F1;
+  --terracotta:#BC5A3C;
+  --terracotta-bg:#FBEDE6;
+  --green:#3A8253;
+  --green-bg:#EAF5ED;
+  --red:#C0473D;
+  --red-bg:#FCEEEC;
+  --amber:#B8862E;
+  --amber-bg:#FBF3E4;
+  --border:#E2DDD3;
+  --shadow-sm:0 1px 3px rgba(35,33,29,0.05), 0 1px 2px rgba(35,33,29,0.04);
+  --shadow-md:0 4px 16px rgba(35,33,29,0.07), 0 2px 6px rgba(35,33,29,0.04);
+  --shadow-lg:0 12px 32px rgba(35,33,29,0.1), 0 4px 12px rgba(35,33,29,0.05);
+  --radius-sm:8px;
+  --radius-md:14px;
+  --radius-lg:20px;
+}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{background:var(--surface-soft);color:var(--ink);font-family:'Inter',-apple-system,sans-serif;min-height:100vh;line-height:1.5}
+button{font-family:inherit}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  background:var(--ink);
+  color:#fff;
+  padding:.85rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  position:sticky;top:0;z-index:100;
+}
+.topbar-left{display:flex;align-items:center;gap:.7rem;min-width:0}
+.topbar-title{font-size:.88rem;font-weight:700;white-space:nowrap}
+.topbar-right{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+
+.ring-wrap{position:relative;width:34px;height:34px;flex-shrink:0}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:rgba(255,255,255,0.15);stroke-width:3}
+.ring-fg{fill:none;stroke:var(--teal-soft);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .4s ease}
+.ring-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700}
+.completed-badge{
+  width:30px;height:30px;background:var(--green);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;
+}
+
+.select-pill{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.16);
+  color:#fff;font-size:.82rem;font-weight:600;
+  padding:.45rem .8rem;border-radius:999px;cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .7rem center;padding-right:1.8rem;
+}
+.select-pill option{
+  background:var(--surface);color:var(--ink);font-weight:500;
+}
+.btn-pill{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#fff;
+  font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:999px;cursor:pointer;
+  transition:background .15s;white-space:nowrap;
+}
+.btn-pill:hover{background:rgba(255,255,255,.16)}
+.btn-pill.accent{background:var(--teal);border-color:var(--teal)}
+.btn-pill.accent:hover{background:var(--teal-soft)}
+
+/* ===== LAYOUT ===== */
+.wrap{max-width:720px;margin:0 auto;padding:1.75rem 1.25rem 4rem}
+
+.page-head{margin-bottom:1.75rem}
+.page-eyebrow{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--teal);background:var(--teal-bg);
+  padding:.3rem .7rem;border-radius:999px;margin-bottom:.9rem;
+}
+.page-title{font-size:1.6rem;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-bottom:.3rem}
+.page-sub{font-size:.92rem;color:var(--ink-soft)}
+
+.section-label{
+  display:flex;align-items:center;gap:.6rem;
+  font-size:.95rem;font-weight:800;color:var(--ink);
+  margin:2rem 0 1rem;
+}
+.section-label .count{
+  font-size:.72rem;font-weight:700;color:var(--ink-faint);
+  background:var(--surface-soft);padding:.15rem .55rem;border-radius:999px;
+}
+.section-hint{font-size:.82rem;color:var(--ink-soft);margin-bottom:1.1rem;margin-top:-.6rem}
+
+/* ===== CARDS ===== */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:1.3rem 1.4rem;
+  margin-bottom:.85rem;
+  box-shadow:var(--shadow-sm);
+  transition:box-shadow .15s, border-color .15s;
+}
+.card.correct{border-color:var(--green);box-shadow:0 0 0 3px var(--green-bg)}
+.card.incorrect{border-color:var(--red);box-shadow:0 0 0 3px var(--red-bg)}
+.card.pending{border-color:var(--border);background:var(--amber-bg)}
+
+.q-head{display:flex;gap:.85rem;align-items:flex-start;margin-bottom:.9rem}
+.q-num{
+  flex-shrink:0;width:28px;height:28px;border-radius:9px;
+  background:var(--ink);color:#fff;
+  font-size:.78rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+.q-num.warn{background:var(--amber)}
+.q-enunciado{font-size:.96rem;line-height:1.55;color:var(--ink);font-weight:500;flex:1;padding-top:.1rem}
+.q-instrucao{font-size:.8rem;color:var(--ink-soft);font-style:italic;margin-top:.25rem}
+
+.warn-badge{
+  display:inline-flex;align-items:center;gap:.3rem;
+  background:var(--amber);color:#fff;font-size:.68rem;font-weight:800;
+  padding:.2rem .55rem;border-radius:999px;margin-bottom:.5rem;letter-spacing:.02em;
+}
+
+/* ===== TEXTAREA / GABARITO ===== */
+.q-textarea{
+  width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  padding:.7rem .85rem;font-family:inherit;font-size:.9rem;color:var(--ink);
+  background:var(--surface-soft);resize:vertical;outline:none;transition:border-color .15s;
+}
+.q-textarea:focus{border-color:var(--teal);background:var(--surface)}
+
+.btn-gab{
+  margin-top:.7rem;background:transparent;border:1.5px solid var(--border);
+  color:var(--ink-soft);font-size:.78rem;font-weight:700;
+  padding:.4rem .85rem;border-radius:999px;cursor:pointer;transition:all .15s;
+}
+.btn-gab:hover{border-color:var(--teal);color:var(--teal)}
+
+.gab-box{
+  margin-top:.8rem;padding:.8rem .95rem;border-radius:var(--radius-sm);
+  font-size:.87rem;line-height:1.5;background:var(--teal-bg);
+  border-left:3px solid var(--teal);display:none;color:var(--ink);
+}
+.gab-box.visible{display:block}
+.gab-label{font-weight:800;color:var(--teal);display:block;margin-bottom:.2rem;font-size:.78rem;text-transform:uppercase;letter-spacing:.03em}
+
+/* ===== LACUNA ===== */
+.lacuna-wrap{display:flex;align-items:center;flex-wrap:wrap;gap:.3rem;font-size:.95rem;line-height:2;font-weight:500}
+.lacuna-input{
+  border:none;border-bottom:2.5px solid var(--ink-faint);background:transparent;
+  font-family:inherit;font-size:.95rem;font-weight:700;color:var(--teal);
+  width:140px;outline:none;padding:.1rem .3rem;text-align:center;transition:border-color .15s;
+}
+.lacuna-input:focus{border-bottom-color:var(--teal)}
+.lacuna-input:disabled{opacity:.85}
+.lacuna-input.ok{border-bottom-color:var(--green)!important;color:var(--green)!important}
+.lacuna-input.err{border-bottom-color:var(--red)!important;color:var(--red)!important}
+.gab-lacuna{margin-top:.6rem;font-size:.85rem;font-weight:600;display:none}
+.gab-lacuna.visible{display:flex;align-items:center;gap:.4rem}
+.gab-lacuna.ok{color:var(--green)}
+.gab-lacuna.err{color:var(--red)}
+
+/* ===== ALTERNATIVAS ===== */
+.alt-list{display:flex;flex-direction:column;gap:.55rem}
+.alt{
+  display:flex;align-items:flex-start;gap:.75rem;
+  background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  padding:.7rem .9rem;cursor:pointer;text-align:left;font-family:inherit;
+  font-size:.89rem;font-weight:500;color:var(--ink);transition:all .12s;width:100%;
+}
+.alt:hover{border-color:var(--teal-soft);background:var(--teal-bg)}
+.alt.sel{border-color:var(--teal);background:var(--teal-bg);font-weight:600}
+.alt.acerto{border-color:var(--green);background:var(--green-bg);font-weight:600}
+.alt.errada{border-color:var(--red);background:var(--red-bg);font-weight:600}
+.alt.perdida{border-color:var(--amber);background:var(--amber-bg);font-weight:600}
+
+.alt-letra{
+  flex-shrink:0;width:24px;height:24px;border-radius:7px;
+  background:var(--surface-soft);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.74rem;font-weight:800;color:var(--ink-soft);
+}
+.alt.sel .alt-letra{background:var(--teal);border-color:var(--teal);color:#fff}
+.alt.acerto .alt-letra{background:var(--green);border-color:var(--green);color:#fff}
+.alt.errada .alt-letra{background:var(--red);border-color:var(--red);color:#fff}
+.alt.perdida .alt-letra{background:var(--amber);border-color:var(--amber);color:#fff}
+.alt-texto{flex:1;line-height:1.5;padding-top:.05rem}
+.alt-badge{font-weight:800;margin-left:.5rem;font-size:.85rem}
+
+/* ===== PLACAR ===== */
+.placar{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:1.6rem;margin-bottom:1.75rem;box-shadow:var(--shadow-md);
+}
+.placar-top{display:flex;align-items:center;gap:.7rem;margin-bottom:1.2rem;padding-bottom:1.1rem;border-bottom:1px solid var(--border)}
+.placar-icon{
+  width:36px;height:36px;border-radius:10px;background:var(--green);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;flex-shrink:0;
+}
+.placar-titulo{font-size:1.02rem;font-weight:800;color:var(--ink)}
+.placar-sub{font-size:.8rem;color:var(--ink-soft);margin-top:.1rem}
+
+.placar-row{display:flex;align-items:center;gap:.9rem;margin-bottom:.8rem}
+.placar-row-label{font-size:.84rem;font-weight:600;color:var(--ink-soft);width:115px;flex-shrink:0}
+.placar-bar-wrap{flex:1;height:8px;background:var(--surface-soft);border-radius:99px;overflow:hidden}
+.placar-bar{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.bar-mult{background:linear-gradient(90deg,var(--teal),var(--teal-soft))}
+.bar-lac{background:linear-gradient(90deg,var(--amber),#FBBF24)}
+.placar-score{font-weight:800;font-size:1rem;color:var(--ink);width:46px;text-align:right;flex-shrink:0}
+.placar-score small{font-weight:600;color:var(--ink-faint);font-size:.74rem}
+
+.placar-total{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);
+}
+.placar-total-label{font-size:.84rem;color:var(--ink-soft);font-weight:600}
+.placar-total-value{font-size:1.15rem;font-weight:800;color:var(--ink)}
+
+/* ===== BUTTONS ===== */
+.btn-block{
+  width:100%;border:none;border-radius:var(--radius-md);font-weight:800;font-size:1rem;
+  padding:1rem;cursor:pointer;transition:transform .1s, box-shadow .15s;
+}
+.btn-block:active{transform:scale(.98)}
+.btn-primary{background:var(--teal);color:#fff;box-shadow:0 4px 14px rgba(27,94,90,.3)}
+.btn-primary:hover{background:var(--teal-soft)}
+.btn-success{background:var(--green);color:#fff;box-shadow:0 4px 14px rgba(16,185,129,.3)}
+.btn-success:hover{filter:brightness(1.06)}
+.btn-ghost{background:var(--surface);color:var(--ink);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:var(--ink-faint)}
+
+.action-card{
+  text-align:center;margin-top:1.75rem;padding:1.5rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+}
+.action-card p{font-size:.85rem;color:var(--ink-soft);margin-bottom:1rem}
+.action-row{display:flex;gap:.7rem;flex-wrap:wrap}
+.action-row .btn-block{flex:1;min-width:160px}
+
+/* ===== HOME ===== */
+.home{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1.25rem;background:
+  radial-gradient(circle at 15% 0%, rgba(27,94,90,0.07), transparent 50%),
+  radial-gradient(circle at 85% 100%, rgba(188,90,60,0.06), transparent 50%),
+  var(--bg);
+}
+.home-inner{text-align:center;max-width:480px;width:100%}
+.home-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--teal);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:.4rem .9rem;border-radius:999px;margin-bottom:1.75rem;box-shadow:var(--shadow-sm);
+}
+.home-title{
+  font-size:clamp(2.2rem,7vw,3rem);font-weight:900;letter-spacing:-.03em;line-height:1.05;
+  color:var(--ink);margin-bottom:.6rem;
+}
+.home-title span{color:var(--terracotta)}
+.home-sub{color:var(--ink-soft);font-size:1rem;margin-bottom:2.2rem;font-weight:500}
+
+.format-pills{display:flex;gap:.55rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.2rem}
+.pill{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:999px;padding:.45rem .9rem;font-size:.78rem;color:var(--ink-soft);font-weight:600;
+  box-shadow:var(--shadow-sm);
+}
+
+/* ===== MATERIAL DE ESTUDO ===== */
+.materia-pdf-link{
+  display:flex;align-items:center;gap:.7rem;
+  background:var(--terracotta-bg);border:1px solid var(--terracotta);border-radius:var(--radius-md);
+  padding:.85rem 1.1rem;margin-bottom:1.5rem;text-decoration:none;
+  transition:all .12s;
+}
+.materia-pdf-link:hover{background:#F7DECF;transform:translateX(2px)}
+.materia-pdf-icon{
+  flex-shrink:0;width:34px;height:34px;border-radius:9px;
+  background:var(--terracotta);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+}
+.materia-pdf-text{font-size:.87rem;color:var(--ink);font-weight:600}
+.materia-pdf-text strong{color:var(--terracotta)}
+
+.materia-toc{display:flex;flex-direction:column;gap:.6rem;margin-bottom:2rem}
+.materia-toc-item{
+  display:flex;align-items:center;gap:.9rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:.9rem 1.1rem;cursor:pointer;text-align:left;width:100%;
+  font-family:inherit;transition:all .12s;box-shadow:var(--shadow-sm);
+}
+.materia-toc-item:hover{border-color:var(--teal-soft);transform:translateX(2px)}
+.materia-toc-num{
+  flex-shrink:0;width:50px;height:50px;border-radius:10px;
+  background:var(--teal-bg);color:var(--teal);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+}
+.materia-toc-num-label{font-size:.55rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;opacity:.8}
+.materia-toc-num-value{font-weight:800;font-size:1.05rem;line-height:1.1}
+.materia-toc-text{flex:1}
+.materia-toc-titulo{font-size:1rem;font-weight:700;color:var(--ink)}
+.materia-toc-arrow{color:var(--ink-faint);flex-shrink:0}
+
+.licao-nav{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.licao-nav-btn{
+  background:var(--surface);border:1px solid var(--border);color:var(--ink-soft);
+  font-size:.78rem;font-weight:700;padding:.4rem .7rem;border-radius:8px;cursor:pointer;
+  transition:all .12s;font-family:inherit;
+}
+.licao-nav-btn:hover{border-color:var(--teal-soft);color:var(--teal)}
+.licao-nav-btn.active{background:var(--teal);border-color:var(--teal);color:#fff}
+
+.licao-secao{margin-bottom:1.8rem}
+.licao-subtitulo{
+  font-size:1.02rem;font-weight:800;color:var(--teal);
+  margin-bottom:.7rem;padding-bottom:.5rem;border-bottom:2px solid var(--teal-bg);
+}
+.licao-paragrafo{
+  font-size:.93rem;line-height:1.7;color:var(--ink);margin-bottom:.85rem;
+  border-radius:8px;padding:.3rem .5rem;margin-left:-.5rem;margin-right:-.5rem;
+  transition:background-color 1.2s ease, box-shadow .3s ease;
+}
+.licao-paragrafo:last-child{margin-bottom:0}
+.licao-paragrafo.highlighted{
+  background-color:var(--amber-bg);
+  box-shadow:0 0 0 2px var(--amber);
+  animation:fonte-pulse 1.6s ease-out 1;
+}
+@keyframes fonte-pulse{
+  0%{background-color:#FDE9B8}
+  100%{background-color:var(--amber-bg)}
+}
+
+/* ===== MODAL: Ver no material ===== */
+.btn-fonte{
+  margin-top:.6rem;background:transparent;border:1.5px dashed var(--teal);
+  color:var(--teal);font-size:.78rem;font-weight:700;
+  padding:.4rem .85rem;border-radius:999px;cursor:pointer;transition:all .15s;
+  display:inline-flex;align-items:center;gap:.35rem;
+}
+.btn-fonte:hover{background:var(--teal-bg);border-style:solid}
+
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(15,15,15,.55);
+  display:flex;align-items:center;justify-content:center;z-index:1000;
+  padding:1.25rem;animation:modal-fade-in .15s ease;
+}
+@keyframes modal-fade-in{from{opacity:0}to{opacity:1}}
+.modal-box{
+  background:var(--surface);border-radius:var(--radius-lg);
+  max-width:560px;width:100%;max-height:80vh;overflow-y:auto;
+  box-shadow:var(--shadow-lg);animation:modal-slide-up .2s ease;
+}
+@keyframes modal-slide-up{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:1.1rem 1.3rem;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--surface);border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+}
+.modal-header-text{font-size:.92rem;font-weight:800;color:var(--ink)}
+.modal-header-sub{font-size:.76rem;color:var(--ink-soft);font-weight:600;margin-top:.1rem}
+.modal-close{
+  flex-shrink:0;width:30px;height:30px;border-radius:8px;border:none;
+  background:var(--surface-soft);color:var(--ink-soft);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+}
+.modal-close:hover{background:var(--border);color:var(--ink)}
+.modal-body{padding:1.2rem 1.3rem}
+.modal-paragrafo{
+  font-size:.91rem;line-height:1.7;color:var(--ink);
+  background:var(--amber-bg);border-left:3px solid var(--amber);
+  border-radius:8px;padding:.85rem 1rem;margin-bottom:.7rem;
+}
+.modal-paragrafo:last-child{margin-bottom:0}
+.modal-footer{padding:0 1.3rem 1.2rem}
+.modal-link-btn{
+  width:100%;background:var(--teal);color:#fff;border:none;border-radius:10px;
+  padding:.8rem;font-size:.88rem;font-weight:700;cursor:pointer;transition:background .15s;
+}
+.modal-link-btn:hover{background:var(--teal-soft)}
+
+.licao-footer-nav{
+  display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;padding-top:1.5rem;
+  border-top:1px solid var(--border);
+}
+.licao-footer-btn{
+  background:var(--surface);border:1px solid var(--border);color:var(--ink);
+  font-size:.85rem;font-weight:700;padding:.7rem 1.1rem;border-radius:10px;cursor:pointer;
+  transition:all .12s;font-family:inherit;display:flex;align-items:center;gap:.4rem;
+}
+.licao-footer-btn:hover{border-color:var(--teal-soft);color:var(--teal)}
+.licao-footer-btn:disabled{opacity:.35;cursor:not-allowed}
+.licao-footer-btn:disabled:hover{border-color:var(--border);color:var(--ink)}
+
+.home-nav{display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.8rem}
+.home-nav-btn{
+  border:none;border-radius:var(--radius-md);padding:1rem 1.5rem;font-size:1rem;font-weight:800;
+  cursor:pointer;transition:transform .12s, box-shadow .15s;display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.home-nav-btn:active{transform:scale(.98)}
+.home-nav-btn.primary{background:var(--teal);color:#fff;box-shadow:0 6px 20px rgba(27,94,90,.28)}
+.home-nav-btn.primary:hover{background:var(--teal-soft)}
+.home-nav-btn.secondary{background:var(--surface);color:var(--ink);border:1.5px solid var(--border);box-shadow:var(--shadow-sm)}
+.home-nav-btn.secondary:hover{border-color:var(--ink-faint)}
+
+.home-grid-label{font-size:.78rem;color:var(--ink-faint);font-weight:600;margin-bottom:.8rem}
+.sim-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.sim-chip{
+  aspect-ratio:1;border-radius:10px;background:var(--surface);border:1px solid var(--border);
+  color:var(--ink-soft);font-size:.85rem;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .12s;box-shadow:var(--shadow-sm);
+}
+.sim-chip:hover{background:var(--terracotta);border-color:var(--terracotta);color:#fff;transform:translateY(-2px)}
+
+@media (max-width:420px){
+  .sim-grid{grid-template-columns:repeat(4,1fr)}
+  .action-row{flex-direction:column}
+  .action-row .btn-block{width:100%}
+}
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script>
+const DISSERTATIVAS = [{"numero": 1, "enunciado": "Explique, com suas próprias palavras, o que significam <strong>mishpat</strong> e <strong>hesed</strong> em Miqueias 6.8 e por que os dois precisam andar juntos.", "gabarito": "<strong>Mishpat</strong> é justiça: julgar e decidir conforme o direito, dar a cada um o que lhe é devido (padrão objetivo). <strong>Hesed</strong> é lealdade amorosa de aliança: bondade que vai além do mérito e sustenta o relacionamento mesmo quando o outro não retribui. Andam juntos porque quem só exige justiça endurece, e quem só oferece misericórdia sem justiça tolera a opressão. Juntos mostram que a ética bíblica não é só jurídica nem só emocional: é relacional e concreta.", "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 2, "enunciado": "Qual a diferença entre <strong>justiça</strong> e <strong>misericórdia</strong> na ética bíblica? Dê um exemplo pastoral do que acontece quando a igreja fica só com uma delas.", "gabarito": "Justiça (mishpat) dá a cada um o que é devido; misericórdia (hesed) dá além do devido, por amor de aliança. A igreja que só cobra compromisso/justiça endurece e esmaga quem sofre; a que só acolhe sem verdade/justiça tolera a opressão (ex.: acolher o agressor sem confrontar a injustiça contra a vítima). O equilíbrio une exigência e compaixão na mesma mesa de aconselhamento (Os 6.6; Mt 23.23).", "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 3, "enunciado": "Em uma frase, o que Levítico 19.2 ensina sobre o <strong>fundamento</strong> da ética do cuidado?", "gabarito": "A ética bíblica começa no caráter de Deus, não no dever ou no esforço humano: somos chamados a ser santos porque Deus é santo — e essa santidade se traduz em conduta concreta com o próximo.", "fonte": {"licao": 10, "paragrafoIds": ["p10-2-0", "p10-2-1", "p10-2-2", "p10-2-3"]}}, {"numero": 4, "enunciado": "Levítico 19.15 diz: \"não favorecerás ao pobre, nem honrarás o poderoso\". Como isso se harmoniza com o cuidado especial que Deus tem pelo vulnerável?", "gabarito": "A justiça bíblica é imparcial: trata cada pessoa pelo que é devido, sem favorecer o pobre por ser pobre nem o rico por ser poderoso. Cuidar do vulnerável não é perverter o juízo a favor dele, mas garantir que ele receba o que lhe é devido e que não seja oprimido. Na igreja: não favorecer o rico do conselho nem ignorar o pobre do banco de trás.", "fonte": {"licao": 10, "paragrafoIds": ["p10-3-0", "p10-3-1", "p10-3-2", "p10-3-3"]}}, {"numero": 5, "enunciado": "Em uma frase, o que Gênesis 1.27 ensina, e qual a implicação disso para o cuidado com o vulnerável?", "gabarito": "O ser humano foi criado à imagem de Deus, por isso sua dignidade vem da origem e não da utilidade, produtividade ou comportamento. Implicação: o cuidado social não é favor, é reconhecimento de um valor que já existe; atentar contra o frágil é atentar contra o Criador.", "fonte": {"licao": 10, "paragrafoIds": ["p10-4-0", "p10-4-1", "p10-4-2", "p10-4-3"]}}, {"numero": 6, "enunciado": "Êxodo 22.22 menciona a tríade órfão, viúva e estrangeiro. Por que esses três? E quem são eles na igreja de hoje?", "gabarito": "São os que não têm voz, terra, marido ou parentesco — os sem rede de proteção social; quem não tem defensor humano tem Deus como defensor, por meio da sua igreja. Hoje: enlutados sem amparo, idosos sozinhos, desempregados, migrantes e refugiados, famílias monoparentais, dependentes químicos em recuperação, pessoas com deficiência, os invisíveis do bairro.", "fonte": {"licao": 10, "paragrafoIds": ["p10-6-0", "p10-6-1", "p10-6-2", "p10-6-3", "p10-18-0", "p10-18-1", "p10-18-2", "p10-18-3", "p10-18-4", "p10-18-5"]}}, {"numero": 7, "enunciado": "Em uma frase, o que Tiago 5.4 ensina? Relacione com a distinção entre \"pobreza que é pecado do pobre\" e \"pobreza que é pecado contra o pobre\".", "gabarito": "Tiago 5.4 ensina que a pobreza pode ser produzida pela injustiça — o salário retido com fraude clama e chega aos ouvidos do Senhor. Por isso o pastor discerne a causa antes de julgar: há pobreza por escolhas pessoais (preguiça, Pv 6) e pobreza causada por opressão (Tg 5.4; Pv 13.23); o tratamento é diferente.", "fonte": {"licao": 10, "paragrafoIds": ["p10-9-0", "p10-9-1", "p10-9-2"]}}, {"numero": 8, "enunciado": "Por que, segundo Jó 42.7, o sofrimento <strong>não prova culpa pessoal</strong>? Qual foi o erro dos amigos de Jó?", "gabarito": "Deus repreendeu Elifaz e os amigos porque não falaram dele o que era reto: aplicaram a teologia da retribuição imediata (\"se sofres, pecaste\") e explicaram a dor alheia. O maior erro pastoral não é a falta de resposta, mas a explicação apressada. Jesus confirma em Jo 9.1-3 (o cego de nascença). Os amigos acertaram enquanto calaram (Jó 2.13).", "fonte": {"licao": 10, "paragrafoIds": ["p10-10-0", "p10-10-1", "p10-10-2", "p10-10-3", "p10-10-4"]}}, {"numero": 9, "enunciado": "Diferencie <strong>socorro</strong> de <strong>capacitação</strong> e explique os três movimentos de Grudem e Asmus.", "gabarito": "Socorro atende a urgência de quem não consegue prover por si; capacitação cria capacidade e devolve autonomia. Os três movimentos: (1) socorro imediato; (2) trabalho/capacitação; (3) reforma das estruturas que produzem e perpetuam a pobreza. Socorro sem capacitação vira dependência; capacitação sem socorro é crueldade. A pergunta pastoral não é quanto dar, mas o que restaura.", "fonte": {"licao": 10, "paragrafoIds": ["p10-14-0", "p10-14-1", "p10-14-2", "p10-14-3", "p10-7-0", "p10-7-1", "p10-7-2", "p10-7-3", "p10-15-0", "p10-15-1", "p10-15-2"]}}, {"numero": 10, "enunciado": "Diferencie <strong>cuidado integral</strong> de <strong>cuidado parcial</strong>, explicando os dois desvios: \"pão sem evangelho\" e \"evangelho sem pão\".", "gabarito": "Cuidado parcial é escolher um lado: evangelho sem pão é compaixão apenas verbal (Tg 2.15-16, palavras sem pão não alimentam); pão sem evangelho é assistência que não anuncia a salvação, não é cuidado completo. Cuidado integral segue o modelo de Cristo (Mt 4.23): ensina, prega e cura — une socorro material, dignidade restaurada e anúncio da salvação. \"Pão sem Cristo não salva, e Cristo sem pão não atende quem está com fome.\"", "fonte": {"licao": 10, "paragrafoIds": ["p10-13-0", "p10-13-1", "p10-13-2", "p10-13-3"]}}, {"numero": 11, "enunciado": "Explique a compaixão de Cristo em Mateus 9.36 e Marcos 1.41 como <strong>método encarnacional</strong>, relacionando com Romanos 12.15.", "gabarito": "Em Mt 9.36 Jesus vê as multidões e se compadece; em Mc 1.41 ele se comove (splanchnizomai, comoção visceral), estende a mão e toca o leproso. O método: ver, se comover, se aproximar e tocar o intocável — não amar de longe. Rm 12.15 é imperativo: chorar com quem chora é ordem, presença ombro a ombro que se deixa afetar.", "fonte": {"licao": 10, "paragrafoIds": ["p10-12-0", "p10-12-1", "p10-12-2", "p10-12-3", "p10-11-0", "p10-11-1", "p10-11-2", "p10-11-3"]}}, {"numero": 12, "enunciado": "Por que o jubileu de Levítico 25 é uma <strong>instituição econômica</strong> e não apenas um ato de bondade? Como Tiago 1.27 completa o quadro do cuidado?", "gabarito": "O jubileu era lei estruturada: a cada 50 anos dívidas eram canceladas, escravos libertos e terras devolvidas — um mecanismo da economia de Deus para impedir que a pobreza se tornasse permanente (estrutura injusta também é questão ética). Não era dar dinheiro, era devolver a possibilidade de recomeçar. Tg 1.27 define a religião pura como visitar órfãos e viúvas nas suas tribulações: o cuidado pessoal e concreto é marca de autenticidade da fé.", "fonte": {"licao": 10, "paragrafoIds": ["p10-8-0", "p10-8-1", "p10-8-2", "p10-8-3", "p10-8-4", "p10-8-5", "p10-18-0", "p10-18-1", "p10-18-2", "p10-18-3", "p10-18-4", "p10-18-5"]}}];
+const SIMULADOS = [{"numero": 1, "dados": {"lacunas": [{"numero": 1, "enunciado": "Miqueias 6.8: \"que pratiques a justiça (mishpat), e ames a (_____) (hesed), e andes humildemente com o teu Deus\".", "resposta": "beneficência", "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 2, "enunciado": "\"Santos sereis, porque eu, o SENHOR vosso Deus, sou (_____).\" (Lv 19.2)", "resposta": "santo", "fonte": {"licao": 10, "paragrafoIds": ["p10-2-0", "p10-2-1", "p10-2-2", "p10-2-3"]}}, {"numero": 3, "enunciado": "Mishpat significa justiça: dar a cada um o que lhe é (_____).", "resposta": "devido", "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 4, "enunciado": "\"Não afligireis nem o estrangeiro, nem o órfão, nem a (_____).\" (Êx 22.22)", "resposta": "viúva", "fonte": {"licao": 10, "paragrafoIds": ["p10-6-0", "p10-6-1", "p10-6-2", "p10-6-3"]}}, {"numero": 5, "enunciado": "Os amigos de Jó acertaram enquanto (_____): sete dias e sete noites sem dizer palavra (Jó 2.13).", "resposta": "calaram", "fonte": {"licao": 10, "paragrafoIds": ["p10-11-0", "p10-11-1", "p10-11-2", "p10-11-3"]}}], "multipla": [{"numero": 6, "enunciado": "O que significa o termo hebraico <strong>hesed</strong> em Miqueias 6.8?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "O sacrifício ritual oferecido no templo como expiação", "correta": false}, {"letra": "B", "texto": "A justiça retributiva que dá a cada um exatamente o que merece", "correta": false}, {"letra": "C", "texto": "O ato de julgar e decidir conforme o direito, dando a cada um o que é devido", "correta": false}, {"letra": "D", "texto": "Lealdade amorosa de aliança, bondade que vai além do mérito e sustenta o relacionamento mesmo quando o outro não retribui", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 7, "enunciado": "Por que mishpat e hesed precisam andar juntos?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Porque quem só exige justiça endurece, e quem só oferece misericórdia sem justiça tolera a opressão", "correta": true}, {"letra": "B", "texto": "Porque hesed anula a exigência de mishpat sempre que houver arrependimento", "correta": false}, {"letra": "C", "texto": "Porque mishpat vale para o Antigo Testamento e hesed para o Novo, e juntos cobrem a Bíblia inteira", "correta": false}, {"letra": "D", "texto": "Porque são sinônimos e expressam a mesma ideia com palavras diferentes", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 8, "enunciado": "Segundo Levítico 19.2, onde começa a ética bíblica?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "No caráter de Deus: o povo é santo porque Deus é santo", "correta": true}, {"letra": "B", "texto": "No esforço humano de ser bom", "correta": false}, {"letra": "C", "texto": "Na pressão social do momento sobre a agenda da igreja", "correta": false}, {"letra": "D", "texto": "Na lei civil do Estado de Israel", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-2-0", "p10-2-1", "p10-2-2", "p10-2-3"]}}, {"numero": 9, "enunciado": "Levítico 19.15 ensina que a justiça bíblica:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Aplica-se somente aos tribunais, não às decisões da igreja", "correta": false}, {"letra": "B", "texto": "Deve honrar o poderoso, pois a autoridade vem de Deus", "correta": false}, {"letra": "C", "texto": "Não favorece o pobre nem honra o poderoso, mas trata cada pessoa pelo que é devido", "correta": true}, {"letra": "D", "texto": "Deve sempre favorecer o pobre, porque ele é o vulnerável", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-3-0", "p10-3-1", "p10-3-2", "p10-3-3"]}}, {"numero": 10, "enunciado": "De acordo com Gênesis 1.27, de onde vem a dignidade do vulnerável?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Do seu bom comportamento e da conversão", "correta": false}, {"letra": "B", "texto": "Do reconhecimento que a igreja lhe concede ao ajudá-lo", "correta": false}, {"letra": "C", "texto": "Da sua utilidade e produtividade para a sociedade", "correta": false}, {"letra": "D", "texto": "Da sua origem: ele foi criado à imagem de Deus", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-4-0", "p10-4-1", "p10-4-2", "p10-4-3"]}}, {"numero": 11, "enunciado": "Por que órfão, viúva e estrangeiro formam a tríade protegida pela lei (Êx 22.22)?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Porque eram culpados de pecados que precisavam ser perdoados", "correta": false}, {"letra": "B", "texto": "Porque eram os mais numerosos em Israel", "correta": false}, {"letra": "C", "texto": "Porque não tinham voz, terra, marido ou parentesco — estavam sem rede de proteção social", "correta": true}, {"letra": "D", "texto": "Porque eram os únicos que pagavam o dízimo ao templo", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-6-0", "p10-6-1", "p10-6-2", "p10-6-3"]}}, {"numero": 12, "enunciado": "O que Tiago 5.4 ensina sobre a pobreza?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Que o patrão cristão está isento de pagar salário a irmãos na fé", "correta": false}, {"letra": "B", "texto": "Que toda pobreza é resultado da preguiça", "correta": false}, {"letra": "C", "texto": "Que ela pode ser produzida pela injustiça: o salário retido com fraude clama aos ouvidos do Senhor", "correta": true}, {"letra": "D", "texto": "Que o pobre deve aceitar sua condição em silêncio", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-9-0", "p10-9-1", "p10-9-2"]}}, {"numero": 13, "enunciado": "Em Jó 42.7, por que Deus repreendeu Elifaz e os amigos de Jó?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Porque explicaram o sofrimento de Jó como castigo, e não falaram de Deus o que era reto", "correta": true}, {"letra": "B", "texto": "Porque defenderam a inocência de Jó", "correta": false}, {"letra": "C", "texto": "Porque ficaram em silêncio por sete dias", "correta": false}, {"letra": "D", "texto": "Porque não ofereceram dinheiro a Jó", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-10-0", "p10-10-1", "p10-10-2", "p10-10-3", "p10-10-4"]}}, {"numero": 14, "enunciado": "Quais são os três movimentos do cuidado segundo Grudem e Asmus?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Evangelismo, discipulado e batismo", "correta": false}, {"letra": "B", "texto": "Socorro imediato, trabalho e reforma de estruturas", "correta": true}, {"letra": "C", "texto": "Ver, escutar e servir", "correta": false}, {"letra": "D", "texto": "Doação, oração e visitação", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-14-0", "p10-14-1", "p10-14-2", "p10-14-3"]}}, {"numero": 15, "enunciado": "Qual afirmação descreve o <strong>cuidado integral</strong>?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Atende apenas os membros da igreja, nunca os de fora", "correta": false}, {"letra": "B", "texto": "Prioriza a pregação; a ajuda material é tarefa do Governo", "correta": false}, {"letra": "C", "texto": "Une socorro material, dignidade restaurada e anúncio da salvação, como Jesus que ensinava, pregava e curava (Mt 4.23)", "correta": true}, {"letra": "D", "texto": "Prioriza a cesta básica; o evangelho pode atrapalhar o acolhimento", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-13-0", "p10-13-1", "p10-13-2", "p10-13-3"]}}]}}, {"numero": 2, "dados": {"lacunas": [{"numero": 1, "enunciado": "Hesed é a lealdade amorosa de (_____), a bondade que vai além do mérito.", "resposta": "aliança", "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 2, "enunciado": "\"Eis que o salário dos trabalhadores... que por vós foi retido com (_____), está clamando\" (Tg 5.4).", "resposta": "fraude", "fonte": {"licao": 10, "paragrafoIds": ["p10-9-0", "p10-9-1", "p10-9-2"]}}, {"numero": 3, "enunciado": "\"E criou Deus o homem à sua (_____); à imagem de Deus o criou\" (Gn 1.27).", "resposta": "imagem", "fonte": {"licao": 10, "paragrafoIds": ["p10-4-0", "p10-4-1", "p10-4-2", "p10-4-3"]}}, {"numero": 4, "enunciado": "Socorro sem capacitação vira (_____); capacitação sem socorro é crueldade.", "resposta": "dependência", "fonte": {"licao": 10, "paragrafoIds": ["p10-7-0", "p10-7-1", "p10-7-2", "p10-7-3"]}}, {"numero": 5, "enunciado": "\"Alegrai-vos com os que se alegram, e (_____) com os que choram\" (Rm 12.15).", "resposta": "chorai", "fonte": {"licao": 10, "paragrafoIds": ["p10-11-0", "p10-11-1", "p10-11-2", "p10-11-3"]}}], "multipla": [{"numero": 6, "enunciado": "O que significa <strong>mishpat</strong>?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Compaixão visceral que move o corpo inteiro", "correta": false}, {"letra": "B", "texto": "Justiça: o ato de julgar conforme o direito, dando a cada um o que lhe é devido", "correta": true}, {"letra": "C", "texto": "Bondade que vai além do mérito por amor de aliança", "correta": false}, {"letra": "D", "texto": "Humildade diante de Deus", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 7, "enunciado": "Uma igreja acolhe todos com carinho, mas nunca confronta o membro que explora financeiramente outros irmãos. Segundo a aula, ela:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Está correta, pois o amor cobre todas as coisas", "correta": false}, {"letra": "B", "texto": "Pratica perfeitamente hesed e mishpat", "correta": false}, {"letra": "C", "texto": "Oferece misericórdia sem justiça e, por isso, tolera a opressão", "correta": true}, {"letra": "D", "texto": "Pratica justiça sem misericórdia e, por isso, endurece", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 8, "enunciado": "Outra igreja só cobra frequência, dízimo e disciplina, sem acolher quem sofre. Segundo a aula, ela:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Exige justiça sem misericórdia e, por isso, endurece", "correta": true}, {"letra": "B", "texto": "Cumpre Miqueias 6.8 integralmente", "correta": false}, {"letra": "C", "texto": "Pratica misericórdia sem justiça e tolera a opressão", "correta": false}, {"letra": "D", "texto": "Equilibra perfeitamente exigência e compaixão", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 9, "enunciado": "Qual a diferença entre ética social como <strong>moda</strong> e como <strong>consequência do evangelho</strong>?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Como consequência do evangelho, o cuidado só acontece em campanhas sazonais", "correta": false}, {"letra": "B", "texto": "Como moda é bíblica; como consequência do evangelho é política", "correta": false}, {"letra": "C", "texto": "Não há diferença: ambas produzem o mesmo cuidado", "correta": false}, {"letra": "D", "texto": "Como moda, entra e sai da agenda conforme a pressão; como consequência do evangelho, brota da fé e não desaparece quando o mundo deixa de olhar", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-1-0", "p10-1-1", "p10-1-2"]}}, {"numero": 10, "enunciado": "A frase \"o cuidado social não é favor, é reconhecimento de um valor que já existe\" se apoia principalmente em:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "2 Tessalonicenses 3.10", "correta": false}, {"letra": "B", "texto": "Provérbios 6.6", "correta": false}, {"letra": "C", "texto": "Levítico 25.10", "correta": false}, {"letra": "D", "texto": "Gênesis 1.27", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-4-0", "p10-4-1", "p10-4-2", "p10-4-3"]}}, {"numero": 11, "enunciado": "Um membro diz ao irmão que perdeu o emprego e adoeceu: \"Deve haver pecado escondido na sua vida\". Qual texto corrige diretamente essa postura?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Jó 42.7, onde Deus repreende os amigos de Jó por explicarem a dor alheia", "correta": true}, {"letra": "B", "texto": "Levítico 19.15, sobre justiça imparcial", "correta": false}, {"letra": "C", "texto": "Efésios 4.28, sobre trabalhar para repartir", "correta": false}, {"letra": "D", "texto": "Levítico 25.10, sobre o ano do jubileu", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-10-0", "p10-10-1", "p10-10-2", "p10-10-3", "p10-10-4"]}}, {"numero": 12, "enunciado": "O verbo de Paulo em Romanos 12.15 (\"chorai com os que choram\") é:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Imperativo: chorar com quem chora é ordem, não sugestão", "correta": true}, {"letra": "B", "texto": "Opcional: depende do temperamento de cada um", "correta": false}, {"letra": "C", "texto": "Restrito aos pastores e líderes", "correta": false}, {"letra": "D", "texto": "Simbólico, sem implicação prática", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-11-0", "p10-11-1", "p10-11-2", "p10-11-3"]}}, {"numero": 13, "enunciado": "Qual destas atitudes é exemplo de <strong>capacitação</strong>, e não apenas de socorro?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Entregar uma cesta básica a uma família em emergência", "correta": false}, {"letra": "B", "texto": "Levar uma refeição a um enfermo acamado", "correta": false}, {"letra": "C", "texto": "Pagar a conta de luz atrasada de uma viúva", "correta": false}, {"letra": "D", "texto": "Oferecer curso profissionalizante, apoio ao emprego e mentoria a um irmão desempregado", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-14-0", "p10-14-1", "p10-14-2", "p10-14-3", "p10-18-0", "p10-18-1", "p10-18-2", "p10-18-3", "p10-18-4", "p10-18-5"]}}, {"numero": 14, "enunciado": "A respeito do jubileu (Lv 25), assinale a alternativa correta:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Era uma política universal aplicada a todas as nações", "correta": false}, {"letra": "B", "texto": "Era uma festa religiosa sem implicações econômicas", "correta": false}, {"letra": "C", "texto": "Era uma instituição econômica para impedir que a pobreza se tornasse permanente, e não apenas um gesto de bondade", "correta": true}, {"letra": "D", "texto": "Era uma esmola voluntária oferecida pelos ricos quando quisessem", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-8-0", "p10-8-1", "p10-8-2", "p10-8-3", "p10-8-4", "p10-8-5"]}}, {"numero": 15, "enunciado": "\"Pão sem Cristo não salva, e Cristo sem pão não atende quem está com fome.\" Essa frase resume a distinção entre:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Socorro e capacitação", "correta": false}, {"letra": "B", "texto": "Cuidado integral e cuidado parcial", "correta": true}, {"letra": "C", "texto": "Justiça e misericórdia", "correta": false}, {"letra": "D", "texto": "Juízo divino e arbitrariedade", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-13-0", "p10-13-1", "p10-13-2", "p10-13-3"]}}]}}, {"numero": 3, "dados": {"lacunas": [{"numero": 1, "enunciado": "A ética bíblica não começa no dever do homem, mas no (_____) de Deus.", "resposta": "caráter", "fonte": {"licao": 10, "paragrafoIds": ["p10-2-0", "p10-2-1", "p10-2-2", "p10-2-3"]}}, {"numero": 2, "enunciado": "\"Não farás injustiça no juízo; não favorecerás ao (_____), nem honrarás o poderoso\" (Lv 19.15).", "resposta": "pobre", "fonte": {"licao": 10, "paragrafoIds": ["p10-3-0", "p10-3-1", "p10-3-2", "p10-3-3"]}}, {"numero": 3, "enunciado": "A teologia da (_____) imediata é a lógica segundo a qual \"se sofres, pecaste\".", "resposta": "retribuição", "fonte": {"licao": 10, "paragrafoIds": ["p10-10-0", "p10-10-1", "p10-10-2", "p10-10-3", "p10-10-4"]}}, {"numero": 4, "enunciado": "O termo grego splanchnizomai, usado para a compaixão de Jesus, descreve uma comoção (_____).", "resposta": "visceral", "fonte": {"licao": 10, "paragrafoIds": ["p10-12-0", "p10-12-1", "p10-12-2", "p10-12-3"]}}, {"numero": 5, "enunciado": "\"Jubileu não era dar dinheiro, era devolver a possibilidade de (_____).\"", "resposta": "recomeçar", "fonte": {"licao": 10, "paragrafoIds": ["p10-8-0", "p10-8-1", "p10-8-2", "p10-8-3", "p10-8-4", "p10-8-5"]}}], "multipla": [{"numero": 6, "enunciado": "Assinale a alternativa que expressa corretamente a relação entre justiça e misericórdia em Miqueias 6.8:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "A misericórdia é superior e substitui a justiça", "correta": false}, {"letra": "B", "texto": "A justiça é superior e a misericórdia é opcional", "correta": false}, {"letra": "C", "texto": "A ética bíblica não escolhe entre as duas: é relacional e concreta ao mesmo tempo", "correta": true}, {"letra": "D", "texto": "As duas são incompatíveis e o crente precisa escolher uma", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 7, "enunciado": "Quais textos confirmam a unidade entre justiça e misericórdia? (Escolha todas as corretas)", "modo": "todas", "instrucao_local": "Escolha TODAS as alternativas corretas.", "alternativas": [{"letra": "A", "texto": "Oséias 6.6 — \"misericórdia quero, e não sacrifício\"", "correta": true}, {"letra": "B", "texto": "Mateus 23.23 — \"o juízo, a misericórdia e a fé\"", "correta": true}, {"letra": "C", "texto": "Provérbios 6.6 — \"vai ter com a formiga, ó preguiçoso\"", "correta": false}, {"letra": "D", "texto": "2 Tessalonicenses 3.10 — \"se alguém não quiser trabalhar, não coma\"", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 8, "enunciado": "Qual a frase que melhor resume Levítico 19.2?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "A ética do cuidado nasce em Deus: sejam santos porque Deus é santo", "correta": true}, {"letra": "B", "texto": "Deus ajuda quem se ajuda", "correta": false}, {"letra": "C", "texto": "A santidade é um sentimento religioso interior, sem efeito social", "correta": false}, {"letra": "D", "texto": "A justiça deve favorecer sempre o mais fraco", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-2-0", "p10-2-1", "p10-2-2", "p10-2-3"]}}, {"numero": 9, "enunciado": "No conselho da igreja, um membro rico pede tratamento diferenciado numa decisão de disciplina. À luz de Levítico 19.15, o líder deve:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Tratá-lo pelo que é devido, sem honrar o poderoso nem favorecer o pobre", "correta": true}, {"letra": "B", "texto": "Atender ao pedido, pois ele sustenta financeiramente a igreja", "correta": false}, {"letra": "C", "texto": "Deixar a decisão para o Governo", "correta": false}, {"letra": "D", "texto": "Puni-lo com mais rigor para mostrar imparcialidade", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-3-0", "p10-3-1", "p10-3-2", "p10-3-3", "p10-18-0", "p10-18-1", "p10-18-2", "p10-18-3", "p10-18-4", "p10-18-5"]}}, {"numero": 10, "enunciado": "Segundo a aula, quais são causas da pobreza reconhecidas pela Escritura? (Escolha todas as corretas)", "modo": "todas", "instrucao_local": "Escolha TODAS as alternativas corretas.", "alternativas": [{"letra": "A", "texto": "Escolhas pessoais", "correta": true}, {"letra": "B", "texto": "Opressão", "correta": true}, {"letra": "C", "texto": "Calamidade", "correta": true}, {"letra": "D", "texto": "Maldição hereditária inevitável", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-9-0", "p10-9-1", "p10-9-2"]}}, {"numero": 11, "enunciado": "O maior erro pastoral diante da dor, segundo a aula, é:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "A visita sem levar ajuda material", "correta": false}, {"letra": "B", "texto": "A explicação apressada", "correta": true}, {"letra": "C", "texto": "A falta de resposta", "correta": false}, {"letra": "D", "texto": "O silêncio prolongado", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-10-0", "p10-10-1", "p10-10-2", "p10-10-3", "p10-10-4"]}}, {"numero": 12, "enunciado": "Quais são os quatro passos da compaixão encarnacional de Cristo (Mc 1.41)?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Ouvir, julgar, corrigir e disciplinar", "correta": false}, {"letra": "B", "texto": "Orar, jejuar, pregar e batizar", "correta": false}, {"letra": "C", "texto": "Doar, registrar, divulgar e agradecer", "correta": false}, {"letra": "D", "texto": "Ver, comover-se, aproximar-se e tocar o intocável", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-12-0", "p10-12-1", "p10-12-2", "p10-12-3"]}}, {"numero": 13, "enunciado": "Uma igreja só ajuda por transferência bancária anônima, sem nunca visitar ou conhecer quem recebe. À luz da aula:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Pratica o cuidado integral", "correta": false}, {"letra": "B", "texto": "Não segue o padrão bíblico: compaixão de longe, por mensagem ou doação anônima, não é o método encarnacional de Cristo", "correta": true}, {"letra": "C", "texto": "Segue perfeitamente o modelo do samaritano", "correta": false}, {"letra": "D", "texto": "Cumpre Tiago 1.27 integralmente", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-12-0", "p10-12-1", "p10-12-2", "p10-12-3"]}}, {"numero": 14, "enunciado": "O terceiro movimento de Grudem e Asmus, a <strong>reforma de estruturas</strong>, consiste em:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Corrigir o sistema que produz e perpetua a pobreza", "correta": true}, {"letra": "B", "texto": "Reformar o templo para receber mais pessoas", "correta": false}, {"letra": "C", "texto": "Ensinar uma profissão a quem pode trabalhar", "correta": false}, {"letra": "D", "texto": "Dar alimento imediato a quem tem fome", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-14-0", "p10-14-1", "p10-14-2", "p10-14-3"]}}, {"numero": 15, "enunciado": "Tiago 2.15-16 (\"Ide em paz, aquentai-vos, e fartai-vos\") condena qual desvio do cuidado?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "O evangelho sem pão: compaixão apenas verbal, que não supre a necessidade do corpo", "correta": true}, {"letra": "B", "texto": "O pão sem evangelho: assistência sem anúncio da salvação", "correta": false}, {"letra": "C", "texto": "A capacitação sem socorro", "correta": false}, {"letra": "D", "texto": "A justiça sem misericórdia", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-13-0", "p10-13-1", "p10-13-2", "p10-13-3"]}}]}}, {"numero": 4, "dados": {"lacunas": [{"numero": 1, "enunciado": "Quem só exige justiça (_____); quem só oferece misericórdia sem justiça tolera a opressão.", "resposta": "endurece", "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 2, "enunciado": "A dignidade do vulnerável não depende de utilidade, (_____) ou comportamento.", "resposta": "produtividade", "fonte": {"licao": 10, "paragrafoIds": ["p10-4-0", "p10-4-1", "p10-4-2", "p10-4-3"]}}, {"numero": 3, "enunciado": "Órfão, viúva e estrangeiro são os que não têm voz, terra, (_____) ou parentesco.", "resposta": "marido", "fonte": {"licao": 10, "paragrafoIds": ["p10-6-0", "p10-6-1", "p10-6-2", "p10-6-3"]}}, {"numero": 4, "enunciado": "A pergunta pastoral não é quanto dar, mas o que (_____).", "resposta": "restaura", "fonte": {"licao": 10, "paragrafoIds": ["p10-14-0", "p10-14-1", "p10-14-2", "p10-14-3"]}}, {"numero": 5, "enunciado": "\"A religião pura e imaculada para com Deus e Pai é esta: (_____) os órfãos e as viúvas nas suas tribulações\" (Tg 1.27).", "resposta": "visitar", "fonte": {"licao": 10, "paragrafoIds": ["p10-18-0", "p10-18-1", "p10-18-2", "p10-18-3", "p10-18-4", "p10-18-5"]}}], "multipla": [{"numero": 6, "enunciado": "Qual alternativa define corretamente os dois termos de Miqueias 6.8?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Mishpat = bondade de aliança; hesed = julgamento conforme o direito", "correta": false}, {"letra": "B", "texto": "Mishpat = dar a cada um o que é devido; hesed = bondade de aliança que vai além do devido", "correta": true}, {"letra": "C", "texto": "Mishpat = humildade; hesed = sacrifício", "correta": false}, {"letra": "D", "texto": "Mishpat = perdão; hesed = punição", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 7, "enunciado": "Hesed sustenta o relacionamento:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Mesmo quando o outro não retribui", "correta": true}, {"letra": "B", "texto": "Apenas entre membros da mesma família", "correta": false}, {"letra": "C", "texto": "Somente quando o outro merece", "correta": false}, {"letra": "D", "texto": "Somente enquanto houver reciprocidade", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 8, "enunciado": "\"Santidade sem justiça social é discurso vazio; justiça sem santidade perde o fundamento.\" Essa frase relaciona quais textos-chave?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Romanos 12.15 e Jó 2.13", "correta": false}, {"letra": "B", "texto": "Tiago 5.4 e Provérbios 31.9", "correta": false}, {"letra": "C", "texto": "Gênesis 1.27 e Gênesis 9.6", "correta": false}, {"letra": "D", "texto": "Levítico 19.2 e Levítico 19.15", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-3-0", "p10-3-1", "p10-3-2", "p10-3-3"]}}, {"numero": 9, "enunciado": "A igreja acolhe um ex-presidiário. Segundo a aula, qual é a postura correta?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Recebê-lo sem nenhum critério ou cuidado com a comunidade", "correta": false}, {"letra": "B", "texto": "Exigir que ele prove mudança antes de ser recebido", "correta": false}, {"letra": "C", "texto": "Acolher sem exigir que ele prove valor primeiro, pois sua dignidade já existe como imagem de Deus — com prudência", "correta": true}, {"letra": "D", "texto": "Encaminhá-lo ao Governo, pois não é responsabilidade da igreja", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-4-0", "p10-4-1", "p10-4-2", "p10-4-3"]}}, {"numero": 10, "enunciado": "Segundo a aula, transferir ao Governo aquilo que a igreja pode fazer é:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "O cumprimento de Gálatas 6.10", "correta": false}, {"letra": "B", "texto": "Uma forma legítima de cuidado integral", "correta": false}, {"letra": "C", "texto": "Participar da opressão", "correta": true}, {"letra": "D", "texto": "A aplicação correta do jubileu", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-7-0", "p10-7-1", "p10-7-2", "p10-7-3"]}}, {"numero": 11, "enunciado": "\"Existe pobreza que é pecado do pobre e existe pobreza que é pecado contra o pobre.\" Qual par de textos ilustra essa distinção?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Romanos 12.15 e Jó 2.13", "correta": false}, {"letra": "B", "texto": "Provérbios 6.6-11 (preguiça) e Tiago 5.4 (salário retido com fraude)", "correta": true}, {"letra": "C", "texto": "Levítico 19.2 e Mateus 5.48", "correta": false}, {"letra": "D", "texto": "Mateus 25.40 e Provérbios 19.17", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-9-0", "p10-9-1", "p10-9-2"]}}, {"numero": 12, "enunciado": "Em João 9.1-3, Jesus responde que o cego de nascença:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Não nasceu cego por pecado próprio nem dos pais, corrigindo a lógica da retribuição", "correta": true}, {"letra": "B", "texto": "Era castigado por falta de fé", "correta": false}, {"letra": "C", "texto": "Nasceu cego por pecado próprio cometido antes do nascimento", "correta": false}, {"letra": "D", "texto": "Nasceu cego por pecado dos pais", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-10-0", "p10-10-1", "p10-10-2", "p10-10-3", "p10-10-4"]}}, {"numero": 13, "enunciado": "Em Mateus 9.36, Jesus teve compaixão das multidões porque:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Eram ricas e não ajudavam os pobres", "correta": false}, {"letra": "B", "texto": "Andavam cansadas e desgarradas, como ovelhas que não têm pastor", "correta": true}, {"letra": "C", "texto": "Não conheciam a lei de Moisés", "correta": false}, {"letra": "D", "texto": "Haviam pecado e precisavam de castigo", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-12-0", "p10-12-1", "p10-12-2", "p10-12-3"]}}, {"numero": 14, "enunciado": "A ilustração \"dar o peixe / ensinar a pescar\" ensina, segundo a aula, que:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Basta dar o peixe sempre, sem plano de saída", "correta": false}, {"letra": "B", "texto": "Nunca se deve dar o peixe, apenas ensinar a pescar", "correta": false}, {"letra": "C", "texto": "A igreja deve deixar a capacitação para o Estado", "correta": false}, {"letra": "D", "texto": "É preciso sustentar a urgência e construir a autonomia ao mesmo tempo — idosos, enfermos e crianças precisam primeiro do peixe", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-15-0", "p10-15-1", "p10-15-2"]}}, {"numero": 15, "enunciado": "Jesus percorria a Galileia \"ensinando, pregando o evangelho do reino e curando\" (Mt 4.23). Esse texto é usado na aula como modelo de:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Socorro sem capacitação", "correta": false}, {"letra": "B", "texto": "Juízo divino", "correta": false}, {"letra": "C", "texto": "Teologia da retribuição", "correta": false}, {"letra": "D", "texto": "Cuidado integral", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-13-0", "p10-13-1", "p10-13-2", "p10-13-3"]}}]}}, {"numero": 5, "dados": {"lacunas": [{"numero": 1, "enunciado": "A ética bíblica não é apenas emocional nem apenas jurídica: ela é (_____) e concreta ao mesmo tempo.", "resposta": "relacional", "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 2, "enunciado": "Atentar contra o frágil é atentar contra o (_____).", "resposta": "Criador", "fonte": {"licao": 10, "paragrafoIds": ["p10-4-0", "p10-4-1", "p10-4-2", "p10-4-3"]}}, {"numero": 3, "enunciado": "\"E Jesus, movido de grande compaixão, estendeu a mão, e (_____)-o\" (Mc 1.41).", "resposta": "tocou", "fonte": {"licao": 10, "paragrafoIds": ["p10-12-0", "p10-12-1", "p10-12-2", "p10-12-3"]}}, {"numero": 4, "enunciado": "O jubileu é uma instituição (_____), e não apenas bondade espontânea.", "resposta": "econômica", "fonte": {"licao": 10, "paragrafoIds": ["p10-8-0", "p10-8-1", "p10-8-2", "p10-8-3", "p10-8-4", "p10-8-5"]}}, {"numero": 5, "enunciado": "Os três movimentos de Grudem e Asmus: socorro imediato, (_____) e reforma de estruturas.", "resposta": "trabalho", "fonte": {"licao": 10, "paragrafoIds": ["p10-14-0", "p10-14-1", "p10-14-2", "p10-14-3"]}}], "multipla": [{"numero": 6, "enunciado": "Um pastor diz: \"Na nova aliança, basta a graça; não precisamos falar em justiça\". À luz de Miqueias 6.8, o erro dele é:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Confundir santidade com humildade", "correta": false}, {"letra": "B", "texto": "Nenhum, pois Miqueias só vale para Israel", "correta": false}, {"letra": "C", "texto": "Separar hesed de mishpat, o que leva a tolerar a opressão", "correta": true}, {"letra": "D", "texto": "Separar mishpat de hesed, o que leva ao endurecimento", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 7, "enunciado": "Quais são os <strong>cinco textos principais</strong> que estruturam a argumentação da aula, segundo o professor? (Escolha todas as corretas)", "modo": "todas", "instrucao_local": "Escolha TODAS as alternativas corretas.", "alternativas": [{"letra": "A", "texto": "Levítico 19.15", "correta": true}, {"letra": "B", "texto": "Êxodo 22.22", "correta": true}, {"letra": "C", "texto": "Levítico 19.2", "correta": true}, {"letra": "D", "texto": "Provérbios 6.6", "correta": false}, {"letra": "E", "texto": "Gênesis 1.27", "correta": true}, {"letra": "F", "texto": "Tiago 5.4", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-0-0", "p10-0-1", "p10-0-2", "p10-0-3", "p10-0-4", "p10-0-5"]}}, {"numero": 8, "enunciado": "Relacione: \"o fundamento no caráter de Deus\" corresponde a:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Levítico 19.2", "correta": true}, {"letra": "B", "texto": "Levítico 19.15", "correta": false}, {"letra": "C", "texto": "Tiago 5.4", "correta": false}, {"letra": "D", "texto": "Êxodo 22.22", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-2-0", "p10-2-1", "p10-2-2", "p10-2-3", "p10-0-0", "p10-0-1", "p10-0-2", "p10-0-3", "p10-0-4", "p10-0-5"]}}, {"numero": 9, "enunciado": "Relacione: \"a justiça que não favorece nem o pobre nem o poderoso\" corresponde a:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Tiago 1.27", "correta": false}, {"letra": "B", "texto": "Levítico 19.15", "correta": true}, {"letra": "C", "texto": "Miqueias 6.8", "correta": false}, {"letra": "D", "texto": "Gênesis 1.27", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-3-0", "p10-3-1", "p10-3-2", "p10-3-3", "p10-0-0", "p10-0-1", "p10-0-2", "p10-0-3", "p10-0-4", "p10-0-5"]}}, {"numero": 10, "enunciado": "Relacione: \"o salário retido com fraude que clama\" corresponde a:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Tiago 1.27", "correta": false}, {"letra": "B", "texto": "Tiago 5.4", "correta": true}, {"letra": "C", "texto": "Tiago 2.15-16", "correta": false}, {"letra": "D", "texto": "Levítico 25.10", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-9-0", "p10-9-1", "p10-9-2", "p10-0-0", "p10-0-1", "p10-0-2", "p10-0-3", "p10-0-4", "p10-0-5"]}}, {"numero": 11, "enunciado": "Segundo a aula, quem não tem defensor humano tem como defensor:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Os anciãos da cidade, exclusivamente", "correta": false}, {"letra": "B", "texto": "Apenas o Estado", "correta": false}, {"letra": "C", "texto": "O próprio Deus, por meio da sua Igreja", "correta": true}, {"letra": "D", "texto": "Ninguém, pois é sua própria responsabilidade", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-6-0", "p10-6-1", "p10-6-2", "p10-6-3"]}}, {"numero": 12, "enunciado": "Provérbios 25.20 (\"vinagre sobre salitre\") é usado na aula para ensinar que:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "O sofrimento é sempre consequência de pecado", "correta": false}, {"letra": "B", "texto": "A igreja deve evitar visitar velórios", "correta": false}, {"letra": "C", "texto": "A alegria impertinente e as respostas prontas ferem o coração aflito; a escuta vem primeiro", "correta": true}, {"letra": "D", "texto": "É preciso animar o enlutado com cânticos alegres", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-11-0", "p10-11-1", "p10-11-2", "p10-11-3"]}}, {"numero": 13, "enunciado": "O samaritano (Lc 10.33-34) imita o método de Cristo porque:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Denunciou os ladrões às autoridades", "correta": false}, {"letra": "B", "texto": "Viu, se comoveu, se aproximou, cuidou e pagou o custo do cuidado", "correta": true}, {"letra": "C", "texto": "Orou pelo ferido à distância", "correta": false}, {"letra": "D", "texto": "Encaminhou o ferido para o templo", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-12-0", "p10-12-1", "p10-12-2", "p10-12-3"]}}, {"numero": 14, "enunciado": "2 Tessalonicenses 3.10 e Efésios 4.28 apontam que o socorro da igreja deve caminhar para:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "O abandono de quem não consegue trabalhar", "correta": false}, {"letra": "B", "texto": "A autonomia do irmão, pelo trabalho que gera inclusive o que repartir", "correta": true}, {"letra": "C", "texto": "A transferência da responsabilidade ao Governo", "correta": false}, {"letra": "D", "texto": "A dependência permanente da igreja", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-14-0", "p10-14-1", "p10-14-2", "p10-14-3", "p10-18-0", "p10-18-1", "p10-18-2", "p10-18-3", "p10-18-4", "p10-18-5"]}}, {"numero": 15, "enunciado": "A igreja distribui cestas toda semana, mas nunca fala de Cristo, \"para não constranger\". Segundo a aula, isso é:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Evangelho sem pão", "correta": false}, {"letra": "B", "texto": "A aplicação correta de Tiago 2.15-16", "correta": false}, {"letra": "C", "texto": "Cuidado integral, pois supre o corpo", "correta": false}, {"letra": "D", "texto": "Cuidado parcial: pão sem evangelho, que não é cuidado completo", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-13-0", "p10-13-1", "p10-13-2", "p10-13-3"]}}]}}, {"numero": 6, "dados": {"lacunas": [{"numero": 1, "enunciado": "Mishpat é o padrão (_____) do que é devido a cada pessoa.", "resposta": "objetivo", "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 2, "enunciado": "\"Que faz justiça ao órfão e à viúva, e ama o (_____), dando-lhe pão e vestes\" (Dt 10.18).", "resposta": "estrangeiro", "fonte": {"licao": 10, "paragrafoIds": ["p10-6-0", "p10-6-1", "p10-6-2", "p10-6-3"]}}, {"numero": 3, "enunciado": "O cuidado com o vulnerável não é um departamento da ética cristã, é o teste de sua (_____).", "resposta": "autenticidade", "fonte": {"licao": 10, "paragrafoIds": ["p10-17-0", "p10-17-1", "p10-17-2"]}}, {"numero": 4, "enunciado": "\"Quando o fizestes a um destes meus (_____) irmãos, a mim o fizestes\" (Mt 25.40).", "resposta": "pequeninos", "fonte": {"licao": 10, "paragrafoIds": ["p10-17-0", "p10-17-1", "p10-17-2"]}}, {"numero": 5, "enunciado": "O líder resiste à tentação de (_____), que explicou o sofrimento alheio e errou.", "resposta": "Elifaz", "fonte": {"licao": 10, "paragrafoIds": ["p10-10-0", "p10-10-1", "p10-10-2", "p10-10-3", "p10-10-4", "p10-18-0", "p10-18-1", "p10-18-2", "p10-18-3", "p10-18-4", "p10-18-5"]}}], "multipla": [{"numero": 6, "enunciado": "Assinale a alternativa INCORRETA sobre mishpat e hesed:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Os dois juntos mostram que a ética bíblica é relacional e concreta", "correta": false}, {"letra": "B", "texto": "Hesed vai além do mérito por amor de aliança", "correta": false}, {"letra": "C", "texto": "Mishpat é dar a cada um o que lhe é devido", "correta": false}, {"letra": "D", "texto": "Hesed é a bondade dada somente a quem a merece", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}}, {"numero": 7, "enunciado": "Assinale a alternativa INCORRETA sobre a dignidade humana:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "É protegida com máxima seriedade (Gn 9.6)", "correta": false}, {"letra": "B", "texto": "Vem de ser imagem de Deus (Gn 1.27)", "correta": false}, {"letra": "C", "texto": "Existe desde o ventre (Sl 139)", "correta": false}, {"letra": "D", "texto": "A dignidade é conquistada quando a pessoa se torna produtiva", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-4-0", "p10-4-1", "p10-4-2", "p10-4-3"]}}, {"numero": 8, "enunciado": "Quais são os quatro verbos que resumem a prática do cuidado, segundo a aula?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Ver, escutar, servir e restaurar", "correta": true}, {"letra": "B", "texto": "Orar, ofertar, visitar e pregar", "correta": false}, {"letra": "C", "texto": "Socorrer, capacitar, reformar e evangelizar", "correta": false}, {"letra": "D", "texto": "Julgar, corrigir, disciplinar e restaurar", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-17-0", "p10-17-1", "p10-17-2"]}}, {"numero": 9, "enunciado": "Qual deve ser a motivação final do cuidado com o vulnerável?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "O dever social e a boa imagem da igreja", "correta": false}, {"letra": "B", "texto": "O amor a Cristo, que se identifica com os pequeninos (Mt 25.40)", "correta": true}, {"letra": "C", "texto": "A culpa por ter mais que os outros", "correta": false}, {"letra": "D", "texto": "O marketing institucional", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-17-0", "p10-17-1", "p10-17-2", "p10-18-0", "p10-18-1", "p10-18-2", "p10-18-3", "p10-18-4", "p10-18-5"]}}, {"numero": 10, "enunciado": "Uma irmã idosa, acamada e sem família pede ajuda. Qual movimento de Grudem e Asmus é prioritário?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Reforma de estruturas, antes de qualquer ajuda", "correta": false}, {"letra": "B", "texto": "Socorro imediato, pois ela não consegue prover por si", "correta": true}, {"letra": "C", "texto": "Trabalho, para devolver-lhe autonomia", "correta": false}, {"letra": "D", "texto": "Nenhum: ela deve procurar o Governo", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-14-0", "p10-14-1", "p10-14-2", "p10-14-3", "p10-15-0", "p10-15-1", "p10-15-2"]}}, {"numero": 11, "enunciado": "O juízo divino no Antigo Testamento é apresentado na aula como:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Ameaça para os pobres e refúgio para os poderosos", "correta": false}, {"letra": "B", "texto": "Ato judicial, não arbitrariedade: a mesma justiça que julga o opressor protege o oprimido", "correta": true}, {"letra": "C", "texto": "Algo indiferente ao sofrimento humano", "correta": false}, {"letra": "D", "texto": "Ira cega e imprevisível", "correta": false}], "fonte": {"licao": 10, "paragrafoIds": ["p10-16-0", "p10-16-1", "p10-16-2"]}}, {"numero": 12, "enunciado": "Quais destes são \"órfãos, viúvas e estrangeiros\" contemporâneos, segundo a aula? (Escolha todas as corretas)", "modo": "todas", "instrucao_local": "Escolha TODAS as alternativas corretas.", "alternativas": [{"letra": "A", "texto": "Empresários bem-sucedidos da igreja", "correta": false}, {"letra": "B", "texto": "Idosos sozinhos", "correta": true}, {"letra": "C", "texto": "Migrantes e refugiados", "correta": true}, {"letra": "D", "texto": "Famílias monoparentais", "correta": true}, {"letra": "E", "texto": "Dependentes químicos em recuperação", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-18-0", "p10-18-1", "p10-18-2", "p10-18-3", "p10-18-4", "p10-18-5", "p10-6-0", "p10-6-1", "p10-6-2", "p10-6-3"]}}, {"numero": 13, "enunciado": "Os três sinais de onde o jubileu precisa ser aplicado são:", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Falta de dízimo, falta de frequência e falta de oração", "correta": false}, {"letra": "B", "texto": "Pecado oculto, falta de fé e preguiça", "correta": false}, {"letra": "C", "texto": "Idade avançada, doença e luto", "correta": false}, {"letra": "D", "texto": "Dívida que venceu a capacidade de pagar, vínculo que mantém a pessoa dependente e base de sustento perdida", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-8-0", "p10-8-1", "p10-8-2", "p10-8-3", "p10-8-4", "p10-8-5"]}}, {"numero": 14, "enunciado": "Qual afirmação sobre o \"limite honesto\" do jubileu na igreja local está correta?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "A igreja deve quitar todas as dívidas de todos os membros", "correta": false}, {"letra": "B", "texto": "A igreja deve substituir o Estado na economia", "correta": false}, {"letra": "C", "texto": "O jubileu não tem nenhuma aplicação hoje", "correta": false}, {"letra": "D", "texto": "A igreja não é o Estado: o jubileu local é real, mas parcial e pastoral, aplicado a pessoas concretas da comunidade", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-8-0", "p10-8-1", "p10-8-2", "p10-8-3", "p10-8-4", "p10-8-5"]}}, {"numero": 15, "enunciado": "Qual dos pares abaixo NÃO é um dos \"pares que confundem\" destacados pelo professor?", "modo": "unica", "instrucao_local": "Escolha a alternativa correta.", "alternativas": [{"letra": "A", "texto": "Justiça e misericórdia", "correta": false}, {"letra": "B", "texto": "Cuidado integral e cuidado parcial", "correta": false}, {"letra": "C", "texto": "Socorro e capacitação", "correta": false}, {"letra": "D", "texto": "Santidade e humildade", "correta": true}], "fonte": {"licao": 10, "paragrafoIds": ["p10-0-0", "p10-0-1", "p10-0-2", "p10-0-3", "p10-0-4", "p10-0-5"]}}]}}];
+
+
+;
+
+const MATERIA = [{"numero": 10, "titulo": "Ética Social e Cuidado com o Vulnerável", "secoes": [{"subtitulo": "★ Foco da prova (orientação do professor)", "paragrafos": ["<strong>Prioridade máxima — os termos hebraicos.</strong> Mishpat e hesed em Miqueias 6.8. Mishpat é justiça, dar a cada um o que é devido. Hesed é lealdade amorosa de aliança, bondade que vai além do mérito. Saber o que cada um significa e por que os dois andam juntos.", "<strong>Prioridade alta — os cinco textos que estruturam a argumentação.</strong> Levítico 19.2 (o fundamento no caráter de Deus) · Levítico 19.15 (a justiça que não favorece nem o pobre nem o poderoso) · Gênesis 1.27 (a dignidade como imagem de Deus) · Êxodo 22.22 (a tríade do órfão, da viúva e do estrangeiro) · Tiago 5.4 (o salário retido com fraude que clama).", "<strong>Prioridade alta — os conceitos que geram confusão.</strong> Sofrimento não prova culpa pessoal (Jó 42.7, Deus repreende os amigos de Jó por explicarem a dor alheia). A diferença entre socorro e capacitação (os três movimentos de Grudem e Asmus). A diferença entre cuidado integral e cuidado parcial (pão sem evangelho e evangelho sem pão).", "<strong>Prioridade média — complementos.</strong> Romanos 12.15 (o imperativo de chorar com quem chora) · Mateus 9.36 e Marcos 1.41 (a compaixão de Cristo como método encarnacional) · Tiago 1.27 (a religião pura como visita a órfãos e viúvas) · Levítico 25 (o jubileu como instituição econômica e não bondade).", "<strong>Não gastar energia com:</strong> datas, nomes de autores secundários, detalhes históricos do jubileu e listas longas de referências. A prova cobra compreensão do argumento, não memorização de cadeia de citações.", "<strong>Resumindo:</strong> domine mishpat e hesed com as próprias palavras; saiba o que cada um dos cinco textos principais ensina, em uma frase; distinga os pares que confundem — justiça e misericórdia, socorro e capacitação, cuidado integral e parcial."], "paragrafoIds": ["p10-0-0", "p10-0-1", "p10-0-2", "p10-0-3", "p10-0-4", "p10-0-5"]}, {"subtitulo": "Introdução — ética social como consequência do evangelho", "paragrafos": ["Esta aula investiga por que o cuidado com o vulnerável pertence ao centro da ética cristã e não à sua periferia. O caminho parte do caráter de Deus, passa pela dignidade humana revelada na Escritura e chega ao acompanhamento concreto do sofrimento. O objetivo é unir convicção teológica, escuta pastoral e ação concreta.", "É preciso distinguir a ética social como <strong>moda</strong> da ética social como <strong>consequência do evangelho</strong>. Como moda, a preocupação social entra e sai da agenda da igreja conforme a pressão do momento. Como consequência do evangelho, o cuidado brota do coração da fé, porque o Deus que salvou em Cristo é o Deus que defende o órfão, sustenta a viúva e ama o estrangeiro. Por isso o cuidado não desaparece quando a atenção do mundo vai embora.", "<em>Lição prática:</em> a ética social não é tema de moda nem discurso de púlpito apenas. Ela nasce do caráter de Deus e se prova na segunda-feira, quando a igreja encontra o sofrimento concreto do bairro."], "paragrafoIds": ["p10-1-0", "p10-1-1", "p10-1-2"]}, {"subtitulo": "1.1 O fundamento — santidade e conduta (Lv 19.2)", "paragrafos": ["A ética do cuidado nasce em Deus; não se trata de uma estratégia humana. Antes de qualquer mandamento, a Escritura revela quem Deus é, e é a partir desse caráter que a conduta do povo recebe sentido. Não começamos pelo esforço humano de ser bons, começamos pela graça de um Deus santo, justo e misericordioso.", "\"Fala a toda a congregação dos filhos de Israel, e dize-lhes: Santos sereis, porque eu, o SENHOR vosso Deus, sou santo.\" <strong>Levítico 19.2</strong>. A ética bíblica não começa no dever do homem, mas no caráter de Deus. A santidade não é sentimento religioso isolado; ela se traduz em conduta concreta nas relações com o próximo.", "Pedro aplica a mesma lógica à igreja: \"Sede santos, porque eu sou santo\" (1Pe 1.15-16). Jesus afirma o mesmo padrão: \"Sede vós pois perfeitos, como é perfeito o vosso Pai\" (Mt 5.48). O santo Deus forma um povo santo, e esse povo se reconhece pela sua maneira de viver diante do próximo.", "<em>Lição prática:</em> a igreja só cuida bem do vulnerável quando primeiro aprende quem Deus é. Antes de organizar programas sociais, o líder examina sua própria conduta diante de Deus e do próximo."], "paragrafoIds": ["p10-2-0", "p10-2-1", "p10-2-2", "p10-2-3"]}, {"subtitulo": "1.2 Santidade também é justiça (Lv 19.15)", "paragrafos": ["\"Não farás injustiça no juízo; não favorecerás ao pobre, nem honrarás o poderoso; com justiça julgarás o teu próximo.\" <strong>Levítico 19.15</strong>. A lei une santidade e justiça no mesmo capítulo.", "A justiça bíblica não favorece nem o pobre nem o rico; ela trata cada pessoa pelo que é devido. Santidade sem justiça social é discurso vazio; justiça sem santidade perde o fundamento.", "Os profetas levantam a mesma voz: \"Corra o juízo como as águas, e a justiça como o ribeiro impetuoso\" (Am 5.24) — de modo contínuo e visível; \"Aprendei a fazer o bem... fazei justiça ao órfão; tratai da causa das viúvas\" (Is 1.17). A justiça na Bíblia é prática diária, e não sentimento ocasional.", "<em>Lição prática:</em> a igreja não pode favorecer o membro rico do conselho nem ignorar o pobre do banco de trás. Decisões de liderança, uso de recursos e disciplina devem tratar cada pessoa pelo que é devido."], "paragrafoIds": ["p10-3-0", "p10-3-1", "p10-3-2", "p10-3-3"]}, {"subtitulo": "1.3 Imago Dei — valor antes do mérito (Gn 1.27)", "paragrafos": ["\"E criou Deus o homem à sua imagem; à imagem de Deus o criou; macho e fêmea os criou.\" <strong>Gênesis 1.27</strong>. O valor do ser humano vem da sua <strong>origem</strong>. Gênesis 9.6 protege essa dignidade com a máxima seriedade: \"Quem derramar o sangue do homem... porque à imagem de Deus fez o homem.\"", "A dignidade do vulnerável não depende de utilidade, produtividade ou comportamento; ela vem de ser imagem de Deus. Atentar contra o frágil é atentar contra o Criador. <strong>O cuidado social não é favor, é reconhecimento de um valor que já existe.</strong>", "O Salmo 139.13-16 revela que Deus forma cada pessoa antes do nascimento, o que protege a vida desde o ventre. Tiago 3.9 denuncia a contradição de bendizer a Deus enquanto se amaldiçoa o homem feito à semelhança dele. O frágil que não produz nada já é obra admirável do Criador.", "<em>Lição prática:</em> a igreja acolhe o dependente químico, o ex-presidiário e o desempregado sem exigir que provem valor primeiro — a dignidade deles já existe. Isso não retira o dever de prudência: simplicidade e prudência andam juntas."], "paragrafoIds": ["p10-4-0", "p10-4-1", "p10-4-2", "p10-4-3"]}, {"subtitulo": "1.4 Justiça e misericórdia — mishpat e hesed (Mq 6.8)", "paragrafos": ["\"Ele te declarou, ó homem, o que é bom; e que é o que o SENHOR pede de ti, senão que pratiques a justiça (<em>mishpat</em>), e ames a beneficência (<em>hesed</em>), e andes humildemente com o teu Deus.\" <strong>Miqueias 6.8</strong>.", "<strong>Mishpat</strong> significa justiça, dar a cada um o que lhe é devido. É o ato de julgar e decidir conforme o direito, o padrão objetivo do que é devido a cada pessoa.", "<strong>Hesed</strong> significa lealdade amorosa, a bondade de aliança que vai além do devido por amor. É a bondade que não se limita ao mérito e que sustenta o relacionamento mesmo quando o outro não retribui.", "A ética bíblica não escolhe entre justiça e misericórdia. <strong>Quem só exige justiça endurece; quem só oferece misericórdia sem justiça tolera a opressão.</strong> Os dois termos juntos mostram que a ética bíblica não é apenas emocional nem apenas jurídica: ela é relacional e concreta ao mesmo tempo.", "Oséias e Jesus confirmam essa unidade: \"Misericórdia quero, e não sacrifício\" (Os 6.6); \"desamparastes o mais importante da lei, o juízo, a misericórdia e a fé; importava fazer estas coisas, e não deixar as outras\" (Mt 23.23).", "<em>Lição prática:</em> a igreja que só cobra compromisso endurece, e a que só oferece acolhimento sem verdade tolera a opressão. O equilíbrio pastoral une exigência e compaixão na mesma mesa de aconselhamento."], "paragrafoIds": ["p10-5-0", "p10-5-1", "p10-5-2", "p10-5-3", "p10-5-4", "p10-5-5"]}, {"subtitulo": "2.1 A tríade protegida — órfão, viúva e estrangeiro (Êx 22.22)", "paragrafos": ["A igreja local precisa nomear quem são seus órfãos, viúvas e estrangeiros hoje. Sem esse mapa concreto, o cuidado se perde em boa intenção e não chega a ninguém.", "\"Não afligireis nem o estrangeiro, nem o órfão, nem a viúva.\" <strong>Êxodo 22.22</strong>. A lei protege nominalmente os sem voz. Órfão, viúva e estrangeiro são os que não têm voz, terra, marido ou parentesco — os que estão sem rede de proteção social. Deus os menciona juntos mais de quarenta vezes no AT.", "Quem não tem defensor humano tem o próprio Deus como defensor, por meio da sua Igreja: ele \"faz justiça ao órfão e à viúva, e ama o estrangeiro, dando-lhe pão e vestes\" (Dt 10.18); é \"Pai de órfãos e juiz de viúvas\" (Sl 68.5). O Deus que defende os sem defesa espera que a sua igreja faça o mesmo.", "<strong>A tríade hoje:</strong> enlutados sem amparo, idosos sozinhos, desempregados, migrantes e refugiados, famílias monoparentais, dependentes químicos em recuperação, pessoas com deficiência e os invisíveis do próprio bairro. A tríade antiga ganha rostos novos, mas o mandamento permanece."], "paragrafoIds": ["p10-6-0", "p10-6-1", "p10-6-2", "p10-6-3"]}, {"subtitulo": "2.2 Proteger é não perverter o direito", "paragrafos": ["\"Maldito aquele que perverter o direito do estrangeiro, do órfão e da viúva\" (Dt 27.19). \"Não oprimirás o estrangeiro, pois vós conheceis o coração do estrangeiro, pois fostes estrangeiros na terra do Egito\" (Êx 23.9).", "Ser insensível às necessidades, deixar de ajudar e fechar os olhos para problemas sociais, transferindo ao Governo aquilo que a igreja pode fazer, é participar da opressão. Paulo ordena a prioridade: \"façamos o bem a todos, mas principalmente aos domésticos da fé\" (Gl 6.10).", "Não basta aliviar a dor de hoje; é preciso impedir que ela se repita amanhã. <strong>Socorro sem capacitação vira dependência; capacitação sem socorro é crueldade.</strong>", "<em>Lição prática:</em> a igreja não pode terceirizar ao Governo aquilo que ela mesma pode fazer. Visita, cesta, escuta e encaminhamento são responsabilidade da comunidade."], "paragrafoIds": ["p10-7-0", "p10-7-1", "p10-7-2", "p10-7-3"]}, {"subtitulo": "2.3 Jubileu — a economia do recomeço (Lv 25)", "paragrafos": ["\"E santificareis o ano quinquagésimo, e apregoareis liberdade na terra a todos os seus moradores... e tornareis cada um à sua possessão, e tornareis cada um à sua família.\" <strong>Levítico 25.10</strong>. Dívidas canceladas, escravos libertos e terras devolvidas.", "O jubileu é uma <strong>instituição econômica</strong>, não um gesto de bondade espontânea: a economia de Deus tem mecanismos para impedir que a pobreza se torne permanente. <strong>Estrutura injusta também é questão ética.</strong> Levítico 25.35-37 protege o irmão que empobrece: sustentá-lo, sem usura nem ganho. Deuteronômio 15.7-11 manda abrir a mão ao pobre.", "<strong>Três sinais</strong> apontam onde o jubileu precisa ser aplicado: dívida que já venceu a capacidade de pagar; vínculo que mantém a pessoa presa e dependente; base de sustento perdida, sem caminho de retorno.", "Na prática: dívida interna entre irmãos; endividamento externo (agiotas, cartões, bancos); vínculo de trabalho injusto (confrontado à luz de Tiago 5.4); perda da base de sustento. A igreja devolve a base quando ajuda a reconstruir renda, não apenas quando entrega cesta. <strong>Jubileu não era dar dinheiro, era devolver a possibilidade de recomeçar.</strong>", "Instrumento concreto: levantamento sigiloso das dívidas internas; política escrita de perdão e renegociação; fundo de misericórdia com regra de uso — \"jubileu sem provisão é discurso\". O jubileu começa quando a igreja decide não lucrar com a fraqueza do irmão.", "Limite honesto: a igreja não é o Estado. O jubileu local é real, mas parcial e pastoral — resolve a vida de pessoas concretas numa comunidade concreta, como Levítico 25, aplicado dentro de um povo."], "paragrafoIds": ["p10-8-0", "p10-8-1", "p10-8-2", "p10-8-3", "p10-8-4", "p10-8-5"]}, {"subtitulo": "2.4 A pobreza pode ser produzida (Tg 5.4)", "paragrafos": ["\"Eis que o salário dos trabalhadores que ceifaram os vossos campos, e que por vós foi retido com fraude, está clamando; e os clamores dos que ceifaram entraram nos ouvidos do Senhor dos Exércitos.\" <strong>Tiago 5.4</strong>.", "Provérbios ordena a defesa pública dos pobres: \"Abre a tua boca, julga retamente, e faze justiça aos pobres e aos necessitados\" (Pv 31.9). A Escritura reconhece mais de uma causa da pobreza: <strong>opressão, calamidade e escolhas pessoais</strong>.", "Provérbios 6.6-11 fala da preguiça que produz miséria; Tiago fala de salário retido com fraude; Provérbios 13.23 reconhece a pobreza produzida pela injustiça. O olhar pastoral precisa discernir a causa antes de julgar: <strong>existe pobreza que é pecado do pobre e existe pobreza que é pecado contra o pobre</strong>, e o tratamento é diferente."], "paragrafoIds": ["p10-9-0", "p10-9-1", "p10-9-2"]}, {"subtitulo": "3.1 Sofrimento não prova culpa pessoal (Jó 42.7)", "paragrafos": ["A igreja se torna refúgio quando aprende a ficar perto sem explicar. Presença silenciosa vale mais que resposta apressada.", "\"Disse também o SENHOR a Elifaz, o temanita: A minha ira se acendeu contra ti e contra os teus dois amigos, porque não falastes de mim o que era reto, como o meu servo Jó.\" <strong>Jó 42.7</strong>.", "A <strong>teologia da retribuição imediata</strong> é a lógica segundo a qual \"se sofres, pecaste\". Deus repreendeu os amigos de Jó. O maior erro pastoral diante da dor não é a falta de resposta, mas a <strong>explicação apressada</strong>.", "Jesus corrige a mesma lógica no cego de nascença: \"Nem ele pecou, nem seus pais; mas foi assim para que se manifestem nele as obras de Deus\" (Jo 9.1-3). Eclesiastes lembra: \"tempo de estar calado, e tempo de falar\" (Ec 3.7).", "<em>Lição prática:</em> nunca diga ao que sofre que ele está colhendo o que plantou. O erro dos amigos de Jó foi explicar a dor alheia, e Deus os repreendeu por isso. O líder resiste à \"tentação de Elifaz\"."], "paragrafoIds": ["p10-10-0", "p10-10-1", "p10-10-2", "p10-10-3", "p10-10-4"]}, {"subtitulo": "3.2 Chorar com quem chora (Rm 12.15)", "paragrafos": ["\"Alegrai-vos com os que se alegram, e chorai com os que choram.\" <strong>Romanos 12.15</strong>. O verbo é <strong>imperativo</strong>: chorar com quem chora é ordem, não sugestão. A compaixão bíblica não é pena distante, é apoio ombro a ombro, que se deixa afetar.", "Os amigos de Jó acertaram enquanto calaram: \"assentaram-se com ele na terra sete dias e sete noites, e nenhum lhe dizia palavra alguma, pois viam que a dor era muito grande\" (Jó 2.13).", "\"Como vinagre sobre salitre, assim é o que canta canções ao coração aflito\" (Pv 25.20): a alegria impertinente fere. A escuta é o primeiro dom que a igreja oferece ao que sofre.", "<em>Lição prática:</em> treine a equipe de visitação para ouvir antes de falar. Levar respostas prontas ao hospital e ao velório fere mais do que consola."], "paragrafoIds": ["p10-11-0", "p10-11-1", "p10-11-2", "p10-11-3"]}, {"subtitulo": "3.3 A compaixão como método (Mt 9.36; Mc 1.41)", "paragrafos": ["\"E, vendo as multidões, teve grande compaixão delas, porque andavam cansadas e desgarradas, como ovelhas que não têm pastor.\" <strong>Mateus 9.36</strong>.", "\"E Jesus, movido de grande compaixão, estendeu a mão, e tocou-o, e disse-lhe: Quero, sê limpo.\" <strong>Marcos 1.41</strong>. O termo grego <em>splanchnizomai</em> descreve uma comoção visceral, que move o corpo inteiro.", "A compaixão de Cristo é <strong>encarnacional</strong>: ele <strong>vê, se comove, se aproxima e toca o intocável</strong>. Esse é o método pastoral — não amar de longe, mas entrar no lugar do outro e agir a partir dali.", "O samaritano imita esse método: aproxima-se, cuida e paga o custo do cuidado (Lc 10.33-34). Hebreus 4.15 apresenta Cristo como o sumo sacerdote que conhece a fraqueza por dentro. Compaixão de longe, por mensagem ou doação anônima, não é o padrão bíblico."], "paragrafoIds": ["p10-12-0", "p10-12-1", "p10-12-2", "p10-12-3"]}, {"subtitulo": "3.4 Cuidado integral", "paragrafos": ["Tiago condena a compaixão apenas verbal: \"Ide em paz, aquentai-vos, e fartai-vos; e lhes não derdes as coisas necessárias para o corpo, que proveito virá daí?\" (Tg 2.15-16). Palavras sem pão não alimentam.", "Mas <strong>o pão sem evangelho também não é cuidado completo</strong>. Jesus percorria a Galileia \"ensinando... pregando o evangelho do reino, e curando todas as enfermidades\" (Mt 4.23). O modelo de Cristo é integral quando cura e prega, atende o corpo e anuncia o Reino.", "Cuidar do vulnerável é unir <strong>socorro material, dignidade restaurada e anúncio da salvação</strong>. Mc 6.34 (Jesus ensina por compaixão), Mc 6.37 (\"Dai-lhes vós de comer\") e At 3.6 (Pedro oferece o que tem em nome de Jesus).", "<em>Lição prática:</em> a igreja não escolhe entre cesta básica e evangelho, ela entrega os dois. <strong>Pão sem Cristo não salva, e Cristo sem pão não atende quem está com fome.</strong>"], "paragrafoIds": ["p10-13-0", "p10-13-1", "p10-13-2", "p10-13-3"]}, {"subtitulo": "4.1 Socorro e capacitação (Grudem e Asmus)", "paragrafos": ["A igreja precisa de critérios claros para não ferir a dignidade de quem ajuda. Generosidade sem método pode criar dependência e perpetuar a miséria.", "Os <strong>três movimentos de Grudem e Asmus</strong>: (1) <strong>socorro imediato</strong> — atende a urgência de quem não consegue prover por si; (2) <strong>trabalho</strong> — cria capacidade e devolve autonomia a quem pode trabalhar; (3) <strong>reforma de estruturas</strong> — corrige o sistema que produz e perpetua a pobreza.", "A ajuda que não cria capacidade perpetua a dependência e fere a dignidade de quem a recebe. <strong>A pergunta pastoral não é quanto dar, mas o que restaura.</strong>", "2Ts 3.10 (\"se alguém não quiser trabalhar, não coma também\"); Ef 4.28 (trabalhar para ter o que repartir); Pv 12.11; 1Tm 5.8 (cuidar dos seus). O socorro da igreja caminha sempre para a autonomia do irmão."], "paragrafoIds": ["p10-14-0", "p10-14-1", "p10-14-2", "p10-14-3"]}, {"subtitulo": "4.2 Assistencialismo prende, capacitação liberta", "paragrafos": ["\"Dê um peixe a quem tem fome e você o alimentará por um dia; ensine-o a pescar e você o alimentará por toda a vida.\" Dar apenas o peixe resolve a fome de hoje e prepara a fome de amanhã. Ensinar a pescar abre caminho para a autonomia.", "Mas há um extremo oposto igualmente cruel: negar socorro a quem não tem força para pescar. O idoso acamado, o enfermo terminal e a criança precisam primeiro do peixe.", "O equilíbrio pastoral sustenta a urgência e constrói a autonomia ao mesmo tempo, <strong>sem transformar ajuda em corrente e sem transformar capacitação em abandono</strong>. Ajuda sem plano de saída vira dependência permanente e fere a dignidade do irmão."], "paragrafoIds": ["p10-15-0", "p10-15-1", "p10-15-2"]}, {"subtitulo": "4.3 Juízo divino, justiça e não arbitrariedade", "paragrafos": ["Deus é misericordioso e fiel ao concerto (Dt 4.31) e fará justiça aos seus escolhidos que a ele clamam (Lc 18.7).", "O juízo divino no AT é apresentado como <strong>ato judicial, não como arbitrariedade</strong>. Deus é o único juiz legítimo da história, e seu juízo nunca é indiferente ao sofrimento — é a resposta a ele. <strong>A mesma justiça que julga o opressor é a que protege o oprimido.</strong>", "\"Não faria justiça o Juiz de toda a terra?\" (Gn 18.25). \"O SENHOR será também um alto refúgio para o oprimido\" (Sl 9.9). O juízo divino é esperança para quem sofre injúria, e não ameaça cega."], "paragrafoIds": ["p10-16-0", "p10-16-1", "p10-16-2"]}, {"subtitulo": "5. Aplicação — da teologia à prática", "paragrafos": ["<strong>Quatro verbos</strong> resumem a prática: <strong>ver</strong> (identificar o vulnerável próximo, não o distante abstrato); <strong>escutar</strong> (ouvir antes de explicar o sofrimento); <strong>servir</strong> (atender à necessidade concreta); <strong>restaurar</strong> (criar condições de autonomia).", "No vulnerável encontramos Cristo: \"quando o fizestes a um destes meus pequeninos irmãos, a mim o fizestes\" (Mt 25.40). A igreja cuida por amor a Cristo, não por culpa, nem por dever social, nem por marketing institucional. Pv 19.17: compadecer-se do pobre é emprestar ao Senhor. Mt 10.42: até um copo de água fria tem galardão.", "O cuidado com o vulnerável não é um departamento da ética cristã, é o <strong>teste de sua autenticidade</strong>. Onde o frágil é desprezado, a fé ainda não se tornou vida."], "paragrafoIds": ["p10-17-0", "p10-17-1", "p10-17-2"]}, {"subtitulo": "6. Resumo final — o líder e a igreja local", "paragrafos": ["<strong>Líder como exemplo de santidade e justiça</strong> (Lv 19.15; 1Tm 3.2-3): não favorece o rico do conselho nem humilha o pobre do banco de trás.", "<strong>Líder como observador que escuta antes de explicar</strong> (Jó 42.7; Rm 12.15): resiste à tentação de Elifaz; calar, visitar e chorar com quem chora.", "<strong>Igreja como tríade de proteção hoje</strong> (Êx 22.22; Tg 1.27): \"A religião pura e imaculada para com Deus e Pai é esta: visitar os órfãos e as viúvas nas suas tribulações, e guardar-se da corrupção do mundo.\" Manter um cadastro simples de cuidado, com visitas, cestas, acompanhamento e encaminhamento.", "<strong>Igreja entre socorro e capacitação</strong> (2Ts 3.10; Ef 4.28): fundo de misericórdia com critérios claros; parcerias com profissionais da igreja. Ajuda competente restaura, ajuda improvisada humilha.", "<strong>Igreja e reforma das estruturas</strong> (Tg 5.4; Pv 31.9; Lv 25.10): a igreja não substitui o Estado nem se omite; denuncia o salário retido, o direito pervertido e a injustiça do juízo.", "<strong>Motivação final</strong> (Mt 25.40; Mt 4.23): a igreja cuida porque no vulnerável encontra Cristo. Onde essa motivação desaparece, o cuidado vira projeto e deixa de ser adoração."], "paragrafoIds": ["p10-18-0", "p10-18-1", "p10-18-2", "p10-18-3", "p10-18-4", "p10-18-5"]}]}];
+
+
+;
+
+let view = 'home';
+let currentSim = 0;
+let currentLicao = 0;
+let respostas = {};
+let corrigido = false;
+let returnTo = null; // { view: 'simulado'|'dissertativas', simIdx?: number }
+let progressoPorSimulado = {}; // { [simIdx]: { respostas: {...}, corrigido: bool } }
+
+const ICON_RESET = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-9.36L1 10"></path></svg>';
+
+const ICON_CHECK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+const ICON_DOWNLOAD = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>';
+const ICON_X = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+const ICON_ARROW = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>';
+const ICON_ARROW_LEFT = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>';
+
+function ring(pct, size) {
+  size = size || 34;
+  const r = (size - 4) / 2;
+  const c = 2 * Math.PI * r;
+  const offset = c - (pct / 100) * c;
+  return `<div class="ring-wrap" style="width:${size}px;height:${size}px">
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <circle class="ring-bg" cx="${size/2}" cy="${size/2}" r="${r}"></circle>
+      <circle class="ring-fg" cx="${size/2}" cy="${size/2}" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${offset}"></circle>
+    </svg>
+    <span class="ring-label">${Math.round(pct)}%</span>
+  </div>`;
+}
+
+function renderHome() {
+  salvarProgressoAtual();
+  view = 'home';
+  returnTo = null;
+  document.getElementById('root').innerHTML = `
+    <div class="home">
+      <div class="home-inner">
+        <span class="home-badge">FABAT · Ética II · Prof. Alexandre Aló</span>
+        <h1 class="home-title">Simulados<br><span>AV2</span></h1>
+        <p class="home-sub">6 simulados · Aula 10 — Ética Social e Cuidado com o Vulnerável · Correção automática</p>
+        <div class="format-pills">
+          <span class="pill">12 dissertativas</span>
+          <span class="pill">5 lacunas</span>
+          <span class="pill">10 múltipla escolha</span>
+        </div>
+        <div class="home-nav">
+          <button class="home-nav-btn primary" onclick="renderDissertativas()">📝&nbsp;&nbsp;Questões Dissertativas</button>
+          <button class="home-nav-btn secondary" onclick="renderMateriaIndex()">📖&nbsp;&nbsp;Material de Estudo</button>
+        </div>
+        <p class="home-grid-label">ou escolha um simulado</p>
+        <div class="sim-grid">
+          ${SIMULADOS.map((s,i) => `<button class="sim-chip" onclick="startSim(${i})">${s.numero}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderDissertativas() {
+  salvarProgressoAtual();
+  view = 'dissertativas';
+  returnTo = null;
+  let html = `<div class="topbar">
+    <div class="topbar-left"><span class="topbar-title">Questões Dissertativas</span></div>
+    <div class="topbar-right">
+      <button class="btn-pill" onclick="renderHome()">← Início</button>
+    </div>
+  </div>`;
+
+  html += '<div class="wrap">';
+  html += `<div class="page-head">
+    <span class="page-eyebrow">Fixas · podem cair na prova</span>
+    <h1 class="page-title">Dissertativas</h1>
+    <p class="page-sub">As questões a seguir são dissertativas, sendo um total de 7. Dessas 7, 5 serão escolhidas para a prova. Responda de forma breve, com no máximo três frases.</p>
+  </div>`;
+
+  DISSERTATIVAS.forEach(q => {
+    const inc = q.incompleta;
+    const val = respostas['d_'+q.numero] || '';
+    html += `<div class="card ${inc?'pending':''}">
+      <div class="q-head">
+        <span class="q-num ${inc?'warn':''}">${q.numero}</span>
+        <div style="flex:1">
+          ${inc ? '<span class="warn-badge">⚠ Aguardando enunciado</span><br>' : ''}
+          <p class="q-enunciado">${q.enunciado}</p>
+        </div>
+      </div>
+      ${inc
+        ? '<p style="font-size:.82rem;color:var(--amber);font-weight:600;padding-left:2.65rem">O professor ainda não enviou esta questão completa.</p>'
+        : `<textarea class="q-textarea" rows="3" placeholder="Sua resposta…" onchange="setResp('d_${q.numero}',this.value)">${val}</textarea>
+           <button class="btn-gab" onclick="toggleGab('d${q.numero}')">Ver gabarito</button>
+           <div class="gab-box" id="gab_d${q.numero}">
+             <span class="gab-label">Gabarito</span>${q.gabarito}
+             ${q.fonte ? `<br><button class="btn-fonte" onclick='showFonteModal(${q.fonte.licao}, ${JSON.stringify(q.fonte.paragrafoIds)})'>📖 Ver no material</button>` : ''}
+           </div>`
+      }
+    </div>`;
+  });
+
+  html += '</div>';
+  document.getElementById('root').innerHTML = html;
+}
+
+// ===== FONTE / MODAL: ver trecho do material que justifica a resposta =====
+
+function getParagrafoTexto(licaoNum, paragrafoId) {
+  const licao = MATERIA.find(l => l.numero === licaoNum);
+  if (!licao) return null;
+  for (const secao of licao.secoes) {
+    const idx = (secao.paragrafoIds || []).indexOf(paragrafoId);
+    if (idx !== -1) return { texto: secao.paragrafos[idx], subtitulo: secao.subtitulo };
+  }
+  return null;
+}
+
+function showFonteModal(licaoNum, paragrafoIds) {
+  const licao = MATERIA.find(l => l.numero === licaoNum);
+  if (!licao) return;
+
+  const trechos = paragrafoIds
+    .map(pid => getParagrafoTexto(licaoNum, pid))
+    .filter(Boolean);
+
+  const modalHtml = `<div class="modal-overlay" id="fonte-modal-overlay" onclick="if(event.target===this) closeFonteModal()">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <div class="modal-header-text">Trecho do material de estudo</div>
+          <div class="modal-header-sub">Aula ${licao.numero} — ${licao.titulo}</div>
+        </div>
+        <button class="modal-close" onclick="closeFonteModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        ${trechos.map(t => `<p class="modal-paragrafo">${t.texto}</p>`).join('')}
+      </div>
+      <div class="modal-footer">
+        <button class="modal-link-btn" onclick='goToFonteInMaterial(${licao.numero}, ${JSON.stringify(paragrafoIds)})'>Abrir na Aula ${licao.numero} →</button>
+      </div>
+    </div>
+  </div>`;
+
+  const container = document.createElement('div');
+  container.id = 'fonte-modal-container';
+  container.innerHTML = modalHtml;
+  document.body.appendChild(container);
+}
+
+function closeFonteModal() {
+  const el = document.getElementById('fonte-modal-container');
+  if (el) el.remove();
+}
+
+function goToFonteInMaterial(licaoNum, paragrafoIds) {
+  closeFonteModal();
+  // Salva de onde o usuário veio, para poder voltar exatamente para lá
+  if (view === 'simulado') {
+    returnTo = { view: 'simulado', simIdx: currentSim };
+    salvarProgressoAtual();
+  } else if (view === 'dissertativas') {
+    returnTo = { view: 'dissertativas' };
+  }
+  const idx = MATERIA.findIndex(l => l.numero === licaoNum);
+  if (idx === -1) return;
+  renderLicao(idx, paragrafoIds);
+  setTimeout(() => {
+    const firstId = paragrafoIds[0];
+    const el = document.getElementById(firstId);
+    if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 80);
+}
+
+function voltarParaOrigem() {
+  if (!returnTo) return renderHome();
+  const destino = returnTo;
+  returnTo = null; // limpa o ponto de retorno — respostas e progresso continuam intactos em `respostas`
+  if (destino.view === 'simulado') {
+    view = 'simulado';
+    currentSim = destino.simIdx;
+    renderSim();
+  } else if (destino.view === 'dissertativas') {
+    renderDissertativas();
+  } else {
+    renderHome();
+  }
+}
+
+function renderMateriaIndex() {
+  salvarProgressoAtual();
+  view = 'materia-index';
+  let html = `<div class="topbar">
+    <div class="topbar-left"><span class="topbar-title">Material de Estudo</span></div>
+    <div class="topbar-right">
+      <button class="btn-pill" onclick="renderHome()">← Início</button>
+    </div>
+  </div>`;
+
+  html += '<div class="wrap">';
+  html += `<div class="page-head">
+    <span class="page-eyebrow">Aula 10</span>
+    <h1 class="page-title">Material de Estudo</h1>
+    <p class="page-sub">Resumo completo das aulas que caem na AV2. Toque em uma aula para ler.</p>
+  </div>`;
+
+  html += `<a class="materia-pdf-link" href="https://drive.google.com/file/d/1XT4rkPUBySrwLtMGY3vh6dPE8lbU5Y30/view?usp=drive_link" target="_blank" rel="noopener">
+    <span class="materia-pdf-icon">${ICON_DOWNLOAD}</span>
+    <span class="materia-pdf-text">Se preferir, <strong>baixe o PDF completo</strong> desse link</span>
+  </a>`;
+
+  html += '<div class="materia-toc">';
+  MATERIA.forEach((licao, idx) => {
+    html += `<button class="materia-toc-item" onclick="renderLicao(${idx})">
+      <span class="materia-toc-num">
+        <span class="materia-toc-num-label">Aula</span>
+        <span class="materia-toc-num-value">${licao.numero}</span>
+      </span>
+      <span class="materia-toc-text">
+        <span class="materia-toc-titulo">${licao.titulo}</span>
+      </span>
+      <span class="materia-toc-arrow">${ICON_ARROW}</span>
+    </button>`;
+  });
+  html += '</div>';
+
+  html += '</div>';
+  document.getElementById('root').innerHTML = html;
+}
+
+function renderLicao(idx, highlightIds) {
+  view = 'licao';
+  currentLicao = idx;
+  const licao = MATERIA[idx];
+  if (!licao) return renderMateriaIndex();
+
+  let html = `<div class="topbar">
+    <div class="topbar-left"><span class="topbar-title">Aula ${licao.numero} — ${licao.titulo}</span></div>
+    <div class="topbar-right">
+      ${returnTo ? `<button class="btn-pill accent" onclick="voltarParaOrigem()">${ICON_ARROW_LEFT} Voltar à questão</button>` : ''}
+      <button class="btn-pill" onclick="renderMateriaIndex()">📖 Aulas</button>
+      <button class="btn-pill" onclick="renderHome()">Início</button>
+    </div>
+  </div>`;
+
+  html += '<div class="wrap">';
+
+  html += '<div class="licao-nav">';
+  MATERIA.forEach((l, i) => {
+    html += `<button class="licao-nav-btn ${i===idx?'active':''}" onclick="renderLicao(${i})">${l.numero}</button>`;
+  });
+  html += '</div>';
+
+  html += `<div class="page-head">
+    <span class="page-eyebrow">Aula ${licao.numero}</span>
+    <h1 class="page-title">${licao.titulo}</h1>
+  </div>`;
+
+  licao.secoes.forEach(secao => {
+    html += `<div class="licao-secao">
+      <h3 class="licao-subtitulo">${secao.subtitulo}</h3>
+      ${secao.paragrafos.map((p, pIdx) => {
+        const pid = secao.paragrafoIds ? secao.paragrafoIds[pIdx] : null;
+        const isHighlighted = highlightIds && pid && highlightIds.includes(pid);
+        return `<p class="licao-paragrafo ${isHighlighted?'highlighted':''}" ${pid?`id="${pid}"`:''}>${p}</p>`;
+      }).join('')}
+    </div>`;
+  });
+
+  const prevIdx = idx - 1;
+  const nextIdx = idx + 1;
+  const hasPrev = prevIdx >= 0;
+  const hasNext = nextIdx < MATERIA.length;
+
+  html += `<div class="licao-footer-nav">
+    <button class="licao-footer-btn" onclick="renderLicao(${prevIdx})" ${!hasPrev?'disabled':''}>
+      ← ${hasPrev ? 'Aula ' + MATERIA[prevIdx].numero : 'Anterior'}
+    </button>
+    <button class="licao-footer-btn" onclick="renderLicao(${nextIdx})" ${!hasNext?'disabled':''}>
+      ${hasNext ? 'Aula ' + MATERIA[nextIdx].numero : 'Próxima'} →
+    </button>
+  </div>`;
+
+  html += '</div>';
+  document.getElementById('root').innerHTML = html;
+}
+
+function salvarProgressoAtual() {
+  // Só salva se estávamos de fato vendo um simulado (evita salvar lixo na primeira chamada)
+  if (view === 'simulado') {
+    progressoPorSimulado[currentSim] = {
+      respostas: { ...respostas },
+      corrigido: corrigido
+    };
+  }
+}
+
+function startSim(idx) {
+  salvarProgressoAtual();
+  view = 'simulado';
+  currentSim = Number(idx);
+  returnTo = null;
+
+  const salvo = progressoPorSimulado[currentSim];
+  if (salvo) {
+    respostas = { ...salvo.respostas };
+    corrigido = salvo.corrigido;
+  } else {
+    respostas = {};
+    corrigido = false;
+  }
+  renderSim();
+}
+
+function reiniciarSimulado() {
+  if (!window.confirm('Isso vai apagar suas respostas deste simulado. Tem certeza que quer recomeçar do zero?')) return;
+  delete progressoPorSimulado[currentSim];
+  respostas = {};
+  corrigido = false;
+  renderSim();
+}
+
+function setResp(key, val) {
+  respostas[key] = val;
+  if (view === 'simulado' && !corrigido) updateTopbarRing();
+  salvarProgressoAtual();
+}
+
+function countAnswered() {
+  const sim = SIMULADOS[currentSim];
+  if (!sim) return {done:0,total:0};
+  let total = 0, done = 0;
+  (sim.dados.lacunas||[]).forEach(q => {
+    total++;
+    if ((respostas['l_'+q.numero]||'').trim()) done++;
+  });
+  (sim.dados.multipla||[]).forEach(q => {
+    total++;
+    if ((respostas['m_'+q.numero]||[]).length) done++;
+  });
+  return {done, total};
+}
+
+function updateTopbarRing() {
+  const {done, total} = countAnswered();
+  const pct = total ? (done/total*100) : 0;
+  const ringEl = document.getElementById('progress-ring-container');
+  if (ringEl) ringEl.innerHTML = ring(pct, 30);
+}
+
+function toggleAlt(qNum, letra, modo) {
+  if (corrigido) return;
+  const key = 'm_' + qNum;
+  const cur = respostas[key] || [];
+  if (modo === 'unica') {
+    respostas[key] = [letra];
+  } else {
+    if (cur.includes(letra)) respostas[key] = cur.filter(l => l !== letra);
+    else respostas[key] = [...cur, letra];
+  }
+  salvarProgressoAtual();
+  renderSim();
+}
+
+function toggleGab(num) {
+  const box = document.getElementById('gab_' + num);
+  if (box) box.classList.toggle('visible');
+}
+
+function corrigir() {
+  corrigido = true;
+  salvarProgressoAtual();
+  renderSim();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function calcScore() {
+  const sim = SIMULADOS[currentSim];
+  if (!sim) return {lac:0,totalLac:0,mult:0,totalMult:0};
+  let lac=0,tLac=0,mult=0,tMult=0;
+  (sim.dados.lacunas||[]).forEach(q => {
+    tLac++;
+    const val = (respostas['l_'+q.numero]||'').trim().toLowerCase();
+    const resp = (q.resposta||'').toLowerCase();
+    if (val && resp && (val === resp || val.includes(resp.slice(0,4)))) lac++;
+  });
+  (sim.dados.multipla||[]).forEach(q => {
+    tMult++;
+    const sel = respostas['m_'+q.numero] || [];
+    const corretas = (q.alternativas||[]).filter(a=>a.correta).map(a=>a.letra);
+    if (sel.length===corretas.length && corretas.every(c=>sel.includes(c))) mult++;
+  });
+  return {lac,totalLac:tLac,mult,totalMult:tMult};
+}
+
+function renderSim() {
+  const sim = SIMULADOS[currentSim];
+  if (!sim) return renderHome();
+  const sc = calcScore();
+  const totalObj = sc.totalLac + sc.totalMult;
+  const acObj = sc.lac + sc.mult;
+  const {done, total} = countAnswered();
+  const progressPct = total ? (done/total*100) : 0;
+
+  let html = `<div class="topbar">
+    <div class="topbar-left">
+      ${!corrigido ? `<span id="progress-ring-container">${ring(progressPct, 30)}</span>` : `<div class="completed-badge">${ICON_CHECK}</div>`}
+      <span class="topbar-title">Simulado ${sim.numero}</span>
+    </div>
+    <div class="topbar-right">
+      <select class="select-pill" onchange="startSim(this.value)">
+        ${SIMULADOS.map((s,i)=>`<option value="${i}" ${i===currentSim?'selected':''}>Simulado ${s.numero}</option>`).join('')}
+      </select>
+      <button class="btn-pill" onclick="reiniciarSimulado()" title="Apagar respostas e recomeçar este simulado">${ICON_RESET} Reiniciar</button>
+      <button class="btn-pill" onclick="renderDissertativas()">Dissertativas</button>
+      <button class="btn-pill" onclick="renderHome()">Início</button>
+    </div>
+  </div>`;
+
+  html += '<div class="wrap">';
+
+  if (corrigido) {
+    const pMult = sc.totalMult ? Math.round(sc.mult/sc.totalMult*100) : 0;
+    const pLac = sc.totalLac ? Math.round(sc.lac/sc.totalLac*100) : 0;
+    html += `<div class="placar">
+      <div class="placar-top">
+        <div class="placar-icon">${ICON_CHECK}</div>
+        <div>
+          <div class="placar-titulo">Resultado das objetivas</div>
+          <div class="placar-sub">As dissertativas têm gabarito próprio — acesse pelo menu acima</div>
+        </div>
+      </div>
+      <div class="placar-row">
+        <span class="placar-row-label">Múltipla escolha</span>
+        <div class="placar-bar-wrap"><div class="placar-bar bar-mult" style="width:${pMult}%"></div></div>
+        <span class="placar-score">${sc.mult}<small>/${sc.totalMult}</small></span>
+      </div>
+      <div class="placar-row">
+        <span class="placar-row-label">Lacunas</span>
+        <div class="placar-bar-wrap"><div class="placar-bar bar-lac" style="width:${pLac}%"></div></div>
+        <span class="placar-score">${sc.lac}<small>/${sc.totalLac}</small></span>
+      </div>
+      <div class="placar-total">
+        <span class="placar-total-label">Total de acertos</span>
+        <span class="placar-total-value">${acObj} / ${totalObj}</span>
+      </div>
+    </div>`;
+  } else {
+    html += `<div class="page-head">
+      <span class="page-eyebrow">Simulado ${sim.numero} de ${SIMULADOS.length}</span>
+      <h1 class="page-title">Lacunas &amp; Múltipla escolha</h1>
+      <p class="page-sub">${done} de ${total} questões respondidas</p>
+    </div>`;
+  }
+
+  html += '<div class="section-label">Preencher os espaços <span class="count">' + (sim.dados.lacunas||[]).length + '</span></div>';
+  html += '<p class="section-hint">Complete com o termo correto.</p>';
+  (sim.dados.lacunas||[]).forEach(q => {
+    const val = respostas['l_'+q.numero] || '';
+    const partes = q.enunciado.split(/\(\s*_____\s*\)/);
+    let status = '';
+    if (corrigido && val.trim()) {
+      const correct = val.trim().toLowerCase().includes((q.resposta||'').toLowerCase().slice(0,4));
+      status = correct ? 'correct' : 'incorrect';
+    }
+    html += `<div class="card ${status}">
+      <div class="q-head">
+        <span class="q-num">${q.numero}</span>
+        <div class="lacuna-wrap">
+          ${partes[0]}<input type="text" class="lacuna-input ${corrigido&&val?(status==='correct'?'ok':'err'):''}" value="${val}" ${corrigido?'disabled':''} placeholder="___" onchange="setResp('l_${q.numero}',this.value)" oninput="setResp('l_${q.numero}',this.value)" />${partes[1]||''}
+        </div>
+      </div>
+      ${corrigido ? `<p class="gab-lacuna visible ${status==='correct'?'ok':'err'}">${status==='correct'?ICON_CHECK+' Correto!':ICON_X+' Resposta: '+q.resposta}</p>` : ''}
+      ${corrigido && q.fonte ? `<button class="btn-fonte" onclick='showFonteModal(${q.fonte.licao}, ${JSON.stringify(q.fonte.paragrafoIds)})'>📖 Ver no material</button>` : ''}
+    </div>`;
+  });
+
+  html += '<div class="section-label">Múltipla escolha <span class="count">' + (sim.dados.multipla||[]).length + '</span></div>';
+  html += '<p class="section-hint">Algumas questões pedem mais de uma alternativa.</p>';
+  (sim.dados.multipla||[]).forEach(q => {
+    const sel = respostas['m_'+q.numero] || [];
+    html += `<div class="card">
+      <div class="q-head">
+        <span class="q-num">${q.numero}</span>
+        <div>
+          <p class="q-enunciado">${q.enunciado}</p>
+          ${q.instrucao_local ? `<p class="q-instrucao">${q.instrucao_local}</p>` : ''}
+        </div>
+      </div>
+      <div class="alt-list">
+        ${(q.alternativas||[]).map(alt => {
+          let cls = sel.includes(alt.letra) ? 'sel' : '';
+          let badge = '';
+          if (corrigido) {
+            if (alt.correta && sel.includes(alt.letra)) { cls='acerto'; badge=`<span class="alt-badge" style="color:var(--green)">${ICON_CHECK}</span>`; }
+            else if (alt.correta && !sel.includes(alt.letra)) { cls='perdida'; badge=`<span class="alt-badge" style="color:var(--amber)">${ICON_ARROW}</span>`; }
+            else if (!alt.correta && sel.includes(alt.letra)) { cls='errada'; badge=`<span class="alt-badge" style="color:var(--red)">${ICON_X}</span>`; }
+          }
+          return `<button class="alt ${cls}" onclick="toggleAlt(${q.numero},'${alt.letra}','${q.modo||'unica'}')" ${corrigido?'style="cursor:default"':''}>
+            <span class="alt-letra">${alt.letra}</span>
+            <span class="alt-texto">${alt.texto}</span>
+            ${badge}
+          </button>`;
+        }).join('')}
+      </div>
+      ${corrigido && q.fonte ? `<button class="btn-fonte" onclick='showFonteModal(${q.fonte.licao}, ${JSON.stringify(q.fonte.paragrafoIds)})'>📖 Ver no material</button>` : ''}
+    </div>`;
+  });
+
+  if (!corrigido) {
+    html += `<div class="action-card">
+      <p>${done < total ? `Faltam ${total - done} questões para concluir.` : 'Tudo respondido — hora de corrigir!'}</p>
+      <button class="btn-block btn-success" onclick="corrigir()">Corrigir prova</button>
+    </div>`;
+  } else {
+    html += `<div class="action-card">
+      <div class="action-row">
+        ${currentSim < SIMULADOS.length-1 ? `<button class="btn-block btn-primary" onclick="startSim(${currentSim+1})">Próximo simulado →</button>` : ''}
+        <button class="btn-block btn-ghost" onclick="renderHome()">Voltar ao início</button>
+      </div>
+    </div>`;
+  }
+
+  html += '</div>';
+  document.getElementById('root').innerHTML = html;
+}
+
+renderHome();
+</script>
+</body>
+</html>
